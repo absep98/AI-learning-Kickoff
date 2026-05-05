@@ -7,8 +7,8 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 ## Current Focus
 
 **Phase:** Month 1 - Foundation And First AI Tool  
-**Current Day:** Day 2  
-**Main Goal:** Make a first LLM API call.
+**Current Day:** Day 3  
+**Main Goal:** Make a first LLM API call using OpenAI or Anthropic.
 
 ## Progress Summary
 
@@ -16,12 +16,16 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 | --- | --- |
 | LLM basics | ✅ Complete |
 | Tokens | ✅ Complete |
-| Context window | ✅ Complete |
-| Temperature | 🔲 Pending |
-| Embeddings (overview) | ✅ Complete |
+| Context window | ✅ Complete (deep) |
+| Temperature | ✅ Complete |
+| Embeddings | ✅ Complete (deep) |
+| LLMs good at | ✅ Complete (10 categories) |
+| LLMs bad at | ✅ Complete |
 | Notes written | ✅ Complete |
-| Concepts explained in own words | ✅ Complete |
-| Day 1 reflection | ✅ Complete |
+| Concepts in own words | ✅ Complete |
+| Day 1 complete | ✅ |
+| Day 2 complete | ✅ |
+| First API call | 🔲 Day 3 |
 
 ## Day 1 - LLM Basics
 
@@ -68,12 +72,13 @@ Recommended options:
 - [x] Write 10 bullet-point notes.
 - [x] Explain tokens in your own words.
 - [x] Explain context window in your own words.
-- [ ] Explain temperature in your own words. _(next)_
+- [x] Explain temperature in your own words.
 - [x] Explain embeddings in your own words.
-- [x] Write 3 examples of tasks LLMs are good at.
-- [x] Write 3 examples of tasks LLMs are weak or risky at.
-- [ ] Write one question you still have.
+- [x] Write examples of tasks LLMs are good at.
+- [x] Write examples of tasks LLMs are weak or risky at.
+- [x] Write one question you still have.
 - [x] Mark Day 1 complete.
+- [x] Mark Day 2 complete.
 
 ### Notes
 
@@ -84,8 +89,14 @@ Recommended options:
 - A token is usually a word, part of a word, punctuation, or code symbol. `unbelievable` → `["un", "believ", "able"]`.
 - Rough rule: 1 token ≈ 0.75 English words. Code tends to use more tokens because symbols get split aggressively.
 - LLM pricing is token-based: input tokens + output tokens = cost. A badly optimised prompt is a money leak.
-- Context window = how many tokens the model can "see" at once (its working memory). If you exceed it, old content gets dropped.
-- Embeddings convert tokens into vectors (lists of numbers). Similar meaning → similar vectors. This is what makes semantic search and RAG possible.
+- Context window = the whiteboard the model writes on. Everything — system prompt, chat history, your input, its output — must fit. Old content drops when full.
+- Context window sizes: 8k (older), 32k, 128k, 1M+ tokens. Bigger = more expensive + slower but can handle entire codebases or books.
+- Even inside the context window, recent tokens get more attention than old ones. Stuffing irrelevant text creates "information soup" and degrades quality.
+- Temperature controls how the model samples the next token from its probability distribution. Low = picks safest option. High = spreads probability more evenly, allows surprising picks.
+- Temperature does NOT add knowledge — same model, different caffeine level. Use low (0.1-0.3) for code/structured output, high (0.9-1.2) for creative writing.
+- Embeddings are vectors (lists of floats) that encode meaning. Similar meaning → similar vectors → close in vector space. `king - man + woman ≈ queen` actually works in vector math.
+- Embeddings power semantic search, RAG, recommendations, and clustering. They are the "understanding layer" between raw text and LLMs.
+- The strongest AI systems are: LLM + tools + memory + retrieval + execution — not LLM alone.
 - LLMs are probabilistic, not deterministic. They pick from a probability distribution each token — that is why the same prompt can give different outputs.
 
 ### Concepts In My Own Words
@@ -100,32 +111,70 @@ A token is the basic unit an LLM processes. Not exactly a word — more like a w
 
 #### What is a context window?
 
-The context window is the total number of tokens the model can hold in memory at once — both input and output combined. Think of it as RAM for the conversation. If you send a huge document plus a long conversation history, once you hit the limit the model starts dropping earlier content. That is why AI sometimes seems to forget what you said earlier.
+The context window is the AI's short-term working memory — a whiteboard of fixed size. Everything on it counts: system instructions, previous messages, your current prompt, and the model's reply. Once you hit the limit, old content gets erased and the model has no access to it. This is not emotional forgetting — the text literally no longer exists in its active memory.
+
+Sizes vary: 8k (older models), 32k, 128k, even 1M+ tokens. Bigger context = more capability but also more cost and latency. Important subtlety: even within the window, recent and relevant tokens get more attention than old distant ones. Blindly stuffing 500 pages in creates "information soup" — this is why RAG was invented. Instead of dumping everything in, RAG retrieves only the relevant chunks and sends just those to the model.
 
 #### What is temperature?
 
-_(Not yet learned — Day 2 or Day 3 topic)_
+Temperature controls how the model picks the next token from its probability distribution. Every token prediction produces a ranked list like: coffee 50%, tea 30%, lava 0.01%. Temperature reshapes that list before sampling.
+
+- **Low temperature (0.0–0.3):** Concentrates probability on the top choices. Output is stable, predictable, and focused. Use for code, SQL, structured JSON, APIs.
+- **High temperature (0.9–1.5):** Flattens the distribution. Less obvious tokens become viable. Output is creative, varied, sometimes surprising. Use for brainstorming, storytelling, creative writing.
+- Temperature does NOT change what the model knows — it only changes how adventurous the token selection becomes. Same brain, different caffeine level.
+- Even at temperature 0, outputs may not be perfectly deterministic due to hardware parallelism and backend optimisations.
+
+Practical guide: coding assistant → 0.1–0.3, customer support → 0.3–0.5, general chatbot → 0.7, creative writing → 0.9–1.2.
 
 #### What are embeddings?
 
-Embeddings are numerical representations of text — lists of floating-point numbers (vectors). The key property: text with similar meaning gets similar vectors. This is what makes semantic search possible: instead of matching exact words, you find text that is close in meaning. Embeddings are also the foundation of RAG (Retrieval-Augmented Generation), where relevant documents are found by vector similarity before being passed to the model.
+Embeddings are numerical vector representations that encode the meaning of text (or code, images, users, products) as a list of floats — usually 384, 768, or 1536 dimensions. The key property: similar meaning → similar vectors → close together in vector space. This is not keyword matching; it is meaning matching.
+
+Famous example: `king - man + woman ≈ queen`. The vectors actually encode semantic relationships that arithmetic can manipulate.
+
+How they power RAG:
+1. Split documents into chunks.
+2. Generate an embedding for each chunk (one API call per chunk).
+3. Store in a vector database.
+4. At query time, embed the user's question.
+5. Find the nearest chunk embeddings by cosine similarity.
+6. Send only those relevant chunks to the LLM as context.
+
+Result: private company chatbot without retraining the model. Embeddings are the "understanding layer" of modern AI systems.
+
+Distinction to keep clear: tokens = break text into processable pieces; embeddings = represent meaning numerically; LLM = predict next tokens.
 
 
 ### LLMs Are Good At
 
-- Generating code, writing, and structured text (JSON, markdown, summaries)
-- Simulating reasoning, connecting concepts, and explaining things
-- Following instructions, translating, reformatting, and classifying text
+- **Language and conversation:** explaining, summarising, translating, rewriting, tutoring, brainstorming
+- **Coding:** boilerplate, debugging, explaining code, refactoring, test generation, SQL, regex, learning new frameworks fast
+- **Pattern recognition:** spotting structure, relationships, and intent from examples without explicit rules
+- **Summarisation:** compressing PDFs, meetings, logs, research papers into bullet points without emotional damage
+- **Text transformation:** formal → casual, notes → blog, code → explanation, paragraph → bullets — any format/style shift
+- **Knowledge retrieval (with caveats):** history, science, programming, business — but not guaranteed accurate, not a database
+- **Reasoning-style tasks:** step-by-step problem decomposition, logic patterns, interview-style questions (especially with "think step by step")
+- **Generating synthetic data:** mock APIs, fake datasets, test cases, placeholder content
+- **Semantic understanding:** meaning-based search and recommendations via embeddings + transformers
+- **Learning acceleration:** dramatically reduces friction from "I want to build X" to "I shipped X" for solo devs and learners
 
 ### LLMs Are Weak Or Risky At
 
-- Hallucinating — stating wrong facts confidently
-- Precise arithmetic and counting
-- Tasks requiring up-to-date or private knowledge (without RAG or tools)
+- **Hallucination:** stating wrong facts with complete confidence — the dangerous 5% genius/nonsense ratio
+- **Exact arithmetic:** a tiny calculator beats an LLM on `187463 × 92827` every time
+- **Guaranteed factual accuracy:** they are pattern predictors, not databases — combine with search/retrieval for truth-critical tasks
+- **Long-term memory:** no persistent memory across sessions without explicit memory systems
+- **True understanding:** simulating reasoning ≠ understanding; fails hilariously on simple logic it hasn't seen in training
+- **Real-world grounding:** only knows the world through text and images, not direct experience
+- **Reliability under ambiguity:** vague prompts produce wildly inconsistent results
 
-### Question I Still Have
+The fix: LLM + tools + databases + search + calculators + memory systems = the strong production pattern.
 
-- How exactly does temperature control randomness at the math level? (probability distribution shaping — look this up next)
+### Questions I Still Have
+
+- ✅ How does temperature control randomness? → Answered: it reshapes the probability distribution before sampling — low temp concentrates mass on top tokens, high temp flattens it.
+- How exactly are embeddings stored and queried in a vector DB? (cosine similarity search mechanics)
+- What happens internally when the context window is exceeded — does the model truncate from the start, middle, or use a sliding window?
 
 ### Day 1 Reflection
 
@@ -135,27 +184,62 @@ The token → number → neural network → prediction pipeline. The attention m
 
 **What felt confusing?**
 
-Temperature not yet covered. Embeddings are conceptually clear but how they are generated and stored in a vector DB is still fuzzy.
+Temperature not yet covered at the time. Embeddings conceptually clear but storage in vector DB still fuzzy.
 
 **What should I review tomorrow?**
 
-- Temperature and how it affects output variability
-- How embeddings are generated via the API (one API call returns a vector)
-- Context window limits for the main models (GPT-4, Claude, Llama)
+- Temperature and how it affects output variability ✅ done in Day 2
+- How embeddings are generated via API ✅ done in Day 2
+- Context window limits for main models (GPT-4, Claude, Llama) — still to verify exact numbers
 
 **Day 1 Status:** ✅ Complete
 
-## Day 2 Preview
+## Day 2 - Temperature, Deeper Context Window, Deeper Embeddings, LLMs Strengths and Weaknesses
 
-Goal: Make your first LLM API call.
+**Date:** May 5, 2026
+
+### What Was Learned
+
+- Temperature: full understanding of probability distribution shaping, practical ranges, and when to use what value.
+- Context window (deep): the whiteboard mental model, RAG as the solution to stuffing, attention degradation for distant tokens, real model size comparisons.
+- Embeddings (deep): vector dimensions, cosine similarity, the famous `king - man + woman ≈ queen` relationship, the full RAG pipeline from chunk → embed → store → retrieve → generate.
+- LLMs good at: expanded to 10 clear categories with examples.
+- LLMs bad at: expanded with the production fix pattern (LLM + tools + memory + retrieval).
+
+### Day 2 Checklist
+
+- [x] Understand temperature fully.
+- [x] Deepen context window understanding.
+- [x] Deepen embeddings understanding.
+- [x] Map out 10 LLM strength categories.
+- [x] Map out LLM weakness categories with fixes.
+
+### Day 2 Reflection
+
+**What felt clear?**
+
+Temperature clicked immediately once framed as "probability distribution shaping not knowledge changing." The RAG pipeline as the answer to context window limitations was a strong insight.
+
+**What is still fuzzy?**
+
+- Exact mechanics of cosine similarity search in a vector DB.
+- What happens internally when context is exceeded (truncation strategy).
+
+**Day 2 Status:** ✅ Complete
+
+## Day 3 Preview - First API Call
+
+Goal: Write real code that calls an LLM API and gets a response.
 
 Planned tasks:
 
-- [ ] Choose OpenAI or Anthropic for the first API experiment.
-- [ ] Create or confirm API key access.
-- [ ] Set up a tiny Node.js or Python script.
-- [ ] Send one prompt.
-- [ ] Print the response.
+- [ ] Choose OpenAI or Anthropic (either works — pick the one you have API access to).
+- [ ] Confirm API key is set as an environment variable (never hardcode it).
+- [ ] Set up a Node.js or Python script.
+- [ ] Send one plain prompt and print the response.
+- [ ] Make the model return structured JSON.
+- [ ] Add basic error handling.
+- [ ] Log the token count and estimated cost.
 
 ## Weekly Review Template
 
