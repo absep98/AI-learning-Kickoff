@@ -7,8 +7,8 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 ## Current Focus
 
 **Phase:** Month 1 - Foundation And First AI Tool  
-**Current Day:** Day 3 (complete) → Day 4 next  
-**Main Goal:** Fix conceptual gaps exposed by knowledge test, then move to first API call.
+**Current Day:** Day 4 (complete) → Day 5 next  
+**Main Goal:** Understand prompt engineering basics.
 
 ## Progress Summary
 
@@ -29,7 +29,9 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 | Day 1 complete | ✅ |
 | Day 2 complete | ✅ |
 | Day 3 complete | ✅ (knowledge test + corrections) |
-| First API call | 🔲 Day 4 |
+| First API call | ✅ (via AI Studio Playground) |
+| Day 4 complete | ✅ |
+| Prompt engineering | 🔲 Day 5 |
 
 ## Day 1 - LLM Basics
 
@@ -281,43 +283,31 @@ Testing yourself before moving on catches gaps that self-study hides. I thought 
 
 **Day 3 Status:** ✅ Complete
 
-## Day 4 Preview - First API Call
+## Day 4 - First LLM Interaction via Playground
 
-Goal: Write real code that calls an LLM API and gets a response.
+**Date:** May 6, 2026
 
-Planned tasks:
+### What Happened
 
-- [ ] Choose OpenAI or Anthropic (either works — pick the one you have API access to).
-- [ ] Confirm API key is set as an environment variable (never hardcode it).
-- [ ] Set up a Node.js or Python script.
-- [ ] Send one plain prompt and print the response.
-- [ ] Make the model return structured JSON.
-- [ ] Add basic error handling.
-- [ ] Log the token count and estimated cost.
+Instead of setting up local code and API keys, I used Google's AI Studio web playground to interact with the Gemini model directly. This was a great way to achieve the day's goal (make a first API call) without any friction.
 
-## Weekly Review Template
+### The Experiment
 
-Use this every 7 days.
+- **Tool:** Google AI Studio
+- **Model:** Gemini
+- **Prompt:** "explain goroutine simply"
+- **Experiment:** Run the same prompt multiple times with different temperature settings to observe the variability in the model's responses.
 
-### Week Of
+### Key Learnings
 
+1.  **LLMs are not deterministic:** The same prompt produced three different, high-quality answers. This is a core feature. The model explores different probable paths in its predictions.
+2.  **Temperature drives variability:** The differences in the responses (new analogies like "Chef" vs. "Office Interns", different phrasing) are a direct result of temperature.
+3.  **Playgrounds are powerful learning tools:** You can learn a huge amount about LLM behavior (prompting, system instructions, parameters) without writing a single line of code.
+4.  **Models are excellent explainers:** The AI provided simple, accurate explanations of a complex programming concept, complete with analogies and code examples. This is a primary strength.
+5.  **Grounding provides sources:** The `[1][2][3]` annotations in the responses show the model using "grounding" — checking its generated text against Google Search to provide sources and improve factuality.
 
-### What I Completed
+### Day 4 Reflection
 
-- 
+This was a smart shortcut. The goal was to understand the input/output behavior of a real model, and the playground was the fastest way to do that. I now have a concrete feel for how temperature affects output and how a model can be a powerful explanatory tool.
 
-### What I Built
-
-- 
-
-### What I Learned
-
-- 
-
-### What Was Hard
-
-- 
-
-### What I Will Do Next Week
-
-- 
+**Day 4 Status:** ✅ Complete
