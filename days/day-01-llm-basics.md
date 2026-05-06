@@ -188,3 +188,7 @@ Then it picks one. Repeat thousands of times. That is text generation.
 **LLM:** A giant neural network trained on text to predict the next token so well that it simulates conversation, coding, and reasoning.
 
 **Token:** A small chunk of text that an LLM converts language into so it can process, understand, and predict text mathematically.
+
+---
+
+> **Post-test note:** After a knowledge test on Day 03, I realised I hadn't fully internalised the pipeline stages and was mixing embeddings with token prediction. See [day-03-corrections-and-gaps.md](day-03-corrections-and-gaps.md) for the corrected mental model.

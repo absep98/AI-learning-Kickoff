@@ -31,7 +31,8 @@ I learn something every day, write it up in plain language, and commit it here. 
 | --- | --- | --- |
 | [Day 01](days/day-01-llm-basics.md) | LLM Basics | What is an LLM, tokens, how text becomes numbers |
 | [Day 02](days/day-02-temperature-context-embeddings.md) | Temperature, Context Window, Embeddings | Probability shaping, working memory, meaning as vectors, what LLMs are good/bad at |
-| Day 03 | First API Call | *(coming next)* |
+| [Day 03](days/day-03-corrections-and-gaps.md) | Knowledge Test + Corrections | Test results, pipeline fix, RAG corrected, search vs LLM, embeddings clarified |
+| Day 04 | First API Call | *(coming next)* |
 
 *(This table grows as I progress.)*
 

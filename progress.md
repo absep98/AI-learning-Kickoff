@@ -7,8 +7,8 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 ## Current Focus
 
 **Phase:** Month 1 - Foundation And First AI Tool  
-**Current Day:** Day 3  
-**Main Goal:** Make a first LLM API call using OpenAI or Anthropic.
+**Current Day:** Day 3 (complete) → Day 4 next  
+**Main Goal:** Fix conceptual gaps exposed by knowledge test, then move to first API call.
 
 ## Progress Summary
 
@@ -18,14 +18,18 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 | Tokens | ✅ Complete |
 | Context window | ✅ Complete (deep) |
 | Temperature | ✅ Complete |
-| Embeddings | ✅ Complete (deep) |
+| Embeddings | ⚠️ Corrected (was mixing with token prediction) |
+| Internal pipeline | ⚠️ Corrected (was missing transformer/attention stage) |
+| RAG | ❌→✅ Corrected (was fundamentally wrong — see Day 3) |
+| Search vs LLM | ⚠️ Corrected (retrieve vs generate) |
 | LLMs good at | ✅ Complete (10 categories) |
 | LLMs bad at | ✅ Complete |
 | Notes written | ✅ Complete |
 | Concepts in own words | ✅ Complete |
 | Day 1 complete | ✅ |
 | Day 2 complete | ✅ |
-| First API call | 🔲 Day 3 |
+| Day 3 complete | ✅ (knowledge test + corrections) |
+| First API call | 🔲 Day 4 |
 
 ## Day 1 - LLM Basics
 
@@ -227,7 +231,57 @@ Temperature clicked immediately once framed as "probability distribution shaping
 
 **Day 2 Status:** ✅ Complete
 
-## Day 3 Preview - First API Call
+## Day 3 - Knowledge Test and Corrections
+
+**Date:** May 5, 2026
+
+### What Happened
+
+Instead of jumping to API calls, I took a 16-question knowledge test covering everything from Day 1 and Day 2. The test exposed real gaps — things I thought I understood but was actually mixing up or had fundamentally wrong.
+
+### Test Score Breakdown
+
+| Area | Score | Notes |
+| --- | --- | --- |
+| Tokens | ✅ Strong | Solid on what they are, why they matter, code tokenization |
+| Context window | ✅ Strong | Clear on limits, overflow, attention degradation |
+| Temperature | ✅ Strong | Probability distribution shaping, practical ranges |
+| Internal pipeline | ⚠️ Partial | Was mixing embedding stage with prediction stage |
+| Embeddings | ⚠️ Partial | Kept confusing embeddings with token prediction |
+| RAG | ❌ Wrong | Thought it was about privacy — it is about retrieval efficiency |
+| Search vs LLM | ⚠️ Weak | Did not separate retrieval from generation |
+| Why LLMs seem intelligent | ⚠️ Shallow | Said "lots of data" — missed pattern learning and emergence |
+
+**Overall:** ~55-60%. Good on basics, major gaps on embeddings role, RAG, and search vs generation.
+
+### Gaps Identified and Corrected
+
+1. **Internal LLM pipeline** — clear separation: tokens → embeddings → transformer + attention → probability distribution → sampling
+2. **Embeddings are representation, not prediction** — they convert tokens to meaning vectors, the transformer does the actual processing
+3. **Two uses of embeddings** — inside LLM (internal layer) vs for RAG/search (embedding model API)
+4. **RAG corrected** — NOT about privacy. It is about retrieval efficiency: retraining is expensive, RAG retrieves relevant chunks dynamically
+5. **RAG pipeline** — docs → chunk → embed → vector DB → query embed → similarity search → retrieve → send to LLM → answer
+6. **Search vs LLM** — search RETRIEVES existing info, LLM GENERATES new text. Modern AI combines both
+7. **Why LLMs seem intelligent** — language contains reasoning patterns, prediction at scale learns structure, transformers learn relationships, emergence at scale
+8. **Code tokenization** — code uses more tokens because symbols, brackets, operators all get split into individual tokens
+9. **Cosine similarity** — measures angle between vectors for meaning comparison, powers vector database search
+
+### Day 3 Reflection
+
+**What the test proved I know well:**
+Token mechanics, context window behavior, temperature control. These are solid.
+
+**What the test exposed:**
+I was treating the LLM pipeline as a blur — "text goes in, answer comes out." The test forced me to separate the stages and understand what each one does.
+
+The RAG gap was the biggest. I had a completely wrong mental model (privacy/local hosting) when it is actually about retrieval efficiency and avoiding expensive retraining.
+
+**Lesson learned:**
+Testing yourself before moving on catches gaps that self-study hides. I thought I was ready for API calls, but I needed these corrections first.
+
+**Day 3 Status:** ✅ Complete
+
+## Day 4 Preview - First API Call
 
 Goal: Write real code that calls an LLM API and gets a response.
 

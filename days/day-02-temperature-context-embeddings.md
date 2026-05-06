@@ -299,6 +299,10 @@ That is where the real production systems emerge.
 - Embeddings = meaning as vectors. Similar meaning → close vectors. Powers semantic search and RAG.
 - LLMs are spectacularly good at language-shaped tasks but need tools, retrieval, and memory for production reliability.
 
+---
+
+> **Post-test note:** A Day 03 knowledge test exposed gaps in my understanding of RAG (I was confusing it with privacy/local hosting — it is actually about retrieval efficiency) and the difference between embeddings and token prediction. See [day-03-corrections-and-gaps.md](day-03-corrections-and-gaps.md) for full corrections.
+
 ## One-Line Summaries
 
 **Context window:** The maximum amount of text/tokens an LLM can actively consider at once while generating a response.
