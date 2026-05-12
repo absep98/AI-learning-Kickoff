@@ -7,8 +7,8 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 ## Current Focus
 
 **Phase:** Month 1 - Foundation And First AI Tool  
-**Current Day:** Day 4 (complete) → Day 5 next  
-**Main Goal:** Understand prompt engineering basics.
+**Current Day:** Day 5 (complete) → Day 6 next  
+**Main Goal:** Build terminal chatbot (first real code that calls an LLM).
 
 ## Progress Summary
 
@@ -31,7 +31,15 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 | Day 3 complete | ✅ (knowledge test + corrections) |
 | First API call | ✅ (via AI Studio Playground) |
 | Day 4 complete | ✅ |
-| Prompt engineering | 🔲 Day 5 |
+| Inference lifecycle | ✅ Complete |
+| LLM statelessness | ✅ Complete |
+| System prompts | ✅ Complete |
+| API parameters | ✅ Complete (temperature, max_tokens, model, stream) |
+| Local vs cloud inference | ✅ Complete |
+| Model parameters (B) | ✅ Complete |
+| AI engineer stack | ✅ Complete |
+| Day 5 complete | ✅ (deep reading session) |
+| Terminal chatbot | 🔲 Day 6 |
 
 ## Day 1 - LLM Basics
 
@@ -311,3 +319,31 @@ Instead of setting up local code and API keys, I used Google's AI Studio web pla
 This was a smart shortcut. The goal was to understand the input/output behavior of a real model, and the playground was the fastest way to do that. I now have a concrete feel for how temperature affects output and how a model can be a powerful explanatory tool.
 
 **Day 4 Status:** ✅ Complete
+
+## Day 5 - Inference, Local Models, API Lifecycle, AI Engineer Stack
+
+**Date:** May 7–12, 2026
+
+### What Happened
+
+Deep reading session over several days. Tried to get the Gemini API working via code but hit issues. Shifted to studying the full picture of how AI applications actually work — inference pipelines, local vs cloud models, the API lifecycle, what parameters control, and what the practical AI engineering stack looks like.
+
+### Key Concepts Learned
+
+1. **Inference** — using a trained model to generate output. Not training. Every API call = inference.
+2. **LLMs are stateless** — no memory between requests. Chat apps re-send the entire conversation history every time. "Memory" is an app-level feature, not a model feature.
+3. **System prompts** — behavior-shaping instructions sent before the user's message. They define personality, output format, and constraints.
+4. **API parameters** — temperature, max_tokens, model selection, streaming. Each one is a control lever.
+5. **Local inference (Ollama)** — run models on your own machine. Free, private, but limited by hardware. Good for learning.
+6. **Model parameters** — what "7B" means. More parameters = smarter but slower and heavier. Phi-3 Mini (3.8B) is enough for learning.
+7. **AI engineer vs ML researcher** — build products with AI (engineer) vs build new models (researcher). The engineer path is the high-leverage move.
+8. **The build path** — chatbot → semantic search → mini RAG → knowledge assistant. Each phase makes the next one obvious.
+9. **What NOT to learn yet** — LangChain, agents, fine-tuning, multi-agent systems. Build the fundamentals first.
+
+### Day 5 Reflection
+
+This was a theory-heavy period but important. The biggest insight: LLMs being stateless changes everything about how AI apps are designed. Chat history management, context window budgeting, and token cost control are all engineering problems that the app developer handles — the model just predicts tokens.
+
+Ready to move from reading to building. Next: actually write code that calls an LLM.
+
+**Day 5 Status:** ✅ Complete

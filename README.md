@@ -33,7 +33,8 @@ I learn something every day, write it up in plain language, and commit it here. 
 | [Day 02](days/day-02-temperature-context-embeddings.md) | Temperature, Context Window, Embeddings | Probability shaping, working memory, meaning as vectors, what LLMs are good/bad at |
 | [Day 03](days/day-03-corrections-and-gaps.md) | Knowledge Test + Corrections | Test results, pipeline fix, RAG corrected, search vs LLM, embeddings clarified |
 | [Day 04](days/day-04-api-playground.md) | First API Call (Playground) | Model variability, temperature effects, using web playgrounds for learning |
-| Day 05 | Prompt Engineering | *(coming next)* |
+| [Day 05](days/day-05-inference-local-models-api-lifecycle.md) | Inference, Local Models, API Lifecycle | Statelessness, system prompts, API params, local vs cloud, model sizes, AI engineer stack |
+| Day 06 | Terminal Chatbot | *(coming next)* |
 
 *(This table grows as I progress.)*
 
