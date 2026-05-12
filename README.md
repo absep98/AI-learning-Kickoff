@@ -21,6 +21,7 @@ I learn something every day, write it up in plain language, and commit it here. 
 | **Daily notes** | [`days/`](days/) | The actual learning content. Start with Day 01. |
 | **6-month roadmap** | [`roadmap.md`](roadmap.md) | The full plan: what to learn, in what order, with projects. |
 | **My progress** | [`progress.md`](progress.md) | Personal tracker. See what I've done and what's next. |
+| **Cheat sheet** | [`cheatsheet.md`](cheatsheet.md) | Master glossary and quick-reference for all concepts. |
 | **Projects** | [`projects/`](projects/) | Code projects built during the journey. |
 
 ## Quick Navigation

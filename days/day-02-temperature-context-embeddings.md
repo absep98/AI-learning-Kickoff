@@ -310,3 +310,22 @@ That is where the real production systems emerge.
 **Temperature:** Controls how random or creative an LLM's token selection becomes during text generation.
 
 **Embeddings:** Numerical vector representations that allow AI systems to understand and compare the meaning of text, code, images, or other data.
+
+---
+
+## Revision Questions
+
+Test yourself. Cover the answers and try to explain each one before looking.
+
+1. **What is the context window? Use the whiteboard analogy to explain it.**
+2. **Everything that goes into the context window counts toward the token limit. Name 4 things that count.**
+3. **What happens when a conversation exceeds the context window? Is it like "forgetting"?**
+4. **Why does stuffing 500 pages into the context window produce bad results even if it fits?**
+5. **What is RAG and why was it invented? (relate it to context window limitations)**
+6. **Temperature is 0.2. What kind of output do you get? Now it is 1.2 — what changes?**
+7. **Does higher temperature make the model smarter or give it more knowledge?**
+8. **What temperature would you use for: (a) SQL query generation, (b) brainstorming, (c) customer support?**
+9. **What is an embedding? How is it different from a token?**
+10. **Explain `king - man + woman ≈ queen` — what does this prove about embeddings?**
+11. **What is cosine similarity? Why does it matter for search?**
+12. **Name 3 things LLMs are strong at and 3 things they are weak at. What is the fix pattern for weaknesses?**

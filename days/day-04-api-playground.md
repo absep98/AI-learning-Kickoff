@@ -69,3 +69,39 @@ This response introduces a new analogy and a slightly different structure. It fe
 3.  **Playgrounds are powerful learning tools:** You don't need to write code to understand LLM behavior. A tool like AI Studio is perfect for experimenting with prompts, system instructions, and parameters like temperature.
 4.  **Models are excellent explainers:** All three responses provided high-quality, simple, and accurate explanations of a complex programming concept (goroutines), complete with analogies and code examples. This is a primary strength of modern LLMs.
 5.  **Grounding provides sources:** The `[1][2][3]` annotations show the model is using "grounding" — checking its generated text against Google Search results to provide sources and improve factuality. This is a feature of Google's models in AI Studio.
+
+---
+
+## What This Day Proved About LLM Behavior
+
+### Non-determinism is a feature
+
+The same prompt produced three different answers. This is not a bug — it is how probabilistic systems work. Every time the model samples from its probability distribution, it can take a different path. This has real implications:
+
+- **For developers:** You cannot assume the same prompt always gives the same output. If you need consistency, lower the temperature.
+- **For testing:** You cannot unit-test LLM output with exact string matching. You need semantic evaluation.
+- **For products:** Users will get different answers to the same question on different days. This is normal.
+
+### Temperature creates different "personalities"
+
+The three responses used different analogies (Chef vs Office Interns), different structures (numbered sections vs flowing prose), and different emphasis points. All from the same model and the same prompt. Temperature did not change what the model knows — it changed which patterns it explored.
+
+### Models are better explainers than most humans
+
+All three responses explained goroutines more clearly than most Stack Overflow answers. They used:
+- Relatable analogies (chef, office interns)
+- Code examples
+- Memory comparisons (2KB vs 1MB)
+- Gotchas and solutions (WaitGroups, Channels)
+
+This is a genuine LLM strength — taking complex concepts and producing clear, structured explanations.
+
+---
+
+## Revision Questions
+
+1. **You run the same prompt 3 times and get 3 different answers. Is this a bug? Why does it happen?**
+2. **How does temperature affect the variability of responses?**
+3. **If you needed the model to give the same answer every time (e.g., for a coding assistant), what would you do?**
+4. **What is "grounding" in Google's AI Studio? How does it differ from pure LLM generation?**
+5. **Why can't you unit-test LLM output with exact string matching?**

@@ -401,3 +401,20 @@ These experiments turn concepts into intuition:
 **Chat UI demystified:** The chat terminal is just HTTP POST to localhost:11434 → JSON response. Any code can replace it.
 
 **Compound AI systems:** Model + Retrieval + Tools + Memory + UI = modern AI product. Raw LLM alone is not enough.
+
+---
+
+## Revision Questions
+
+These questions test whether the hands-on experiments gave you real understanding, not just "I followed the steps."
+
+1. **You run Ollama and ask phi3:mini a question. Describe exactly what happens at the network level.** *(What protocol? What port? What format?)*
+2. **You tell the model "my name is Abhishek" in message 1. In message 5, you ask "what is my name?" and it says "I don't know." Explain why.**
+3. **You ask phi3:mini to write BFS code and it produces broken code. Why? What would you do to get better code?**
+4. **You ask the same question with and without a persona prompt. The outputs are completely different. Why does adding "You are a senior engineer" change the output?**
+5. **You paste a long document before your question and the response is noticeably slower. Explain exactly why.** *(Use the n² attention cost concept)*
+6. **What is the compound AI system formula? Why is a raw LLM not enough for production?**
+7. **Cloud inference feels instant. Local CPU inference is visibly slow. What hardware difference causes this?**
+8. **You set `num_predict: 20` and the response cuts off mid-sentence. What happened? Is the model broken?**
+9. **Someone says "Ollama chat remembers my previous messages." Are they right? What is actually happening?**
+10. **After doing these experiments, explain in your own words why RAG exists.** *(Connect context limits + hallucination + the retrieval solution)*

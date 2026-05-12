@@ -192,3 +192,20 @@ Then it picks one. Repeat thousands of times. That is text generation.
 ---
 
 > **Post-test note:** After a knowledge test on Day 03, I realised I hadn't fully internalised the pipeline stages and was mixing embeddings with token prediction. See [day-03-corrections-and-gaps.md](day-03-corrections-and-gaps.md) for the corrected mental model.
+
+---
+
+## Revision Questions
+
+Test yourself. Cover the answers and try to explain each one before looking.
+
+1. **What does an LLM actually do at its core?** *(Hint: it is one simple operation repeated billions of times)*
+2. **What is a token? Why doesn't the model just use whole words?**
+3. **Roughly how many tokens equal one English word? Why does code use more tokens?**
+4. **List the 5 steps that happen when you send a prompt to an LLM.** *(tokenize → ? → ? → ? → ?)*
+5. **What is the attention mechanism and why was it a breakthrough?**
+6. **Why do LLMs "feel" intelligent even though they are just predicting the next token?**
+7. **Name 3 things LLMs can do surprisingly well, and 3 things they fail at.**
+8. **What does "probabilistic pattern learner" mean? Why is this different from a database?**
+9. **If an LLM says something wrong with full confidence, what is that called? Why does it happen?**
+10. **You send a 500-word prompt. Roughly how many tokens is that? How does that affect cost?**

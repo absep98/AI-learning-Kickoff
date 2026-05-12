@@ -360,3 +360,23 @@ These are two different systems that work together.
 **Search vs LLM:** Search retrieves existing information. LLM generates new text. Modern AI combines both.
 
 **Cosine similarity:** Measures the angle between two vectors — similar direction means similar meaning, regardless of vector length.
+
+---
+
+## Revision Questions
+
+These questions specifically target the gaps this test exposed. If you can answer all of these confidently, the corrections have stuck.
+
+1. **Draw the internal LLM pipeline from text input to generated token.** *(Name all 5 stages and what each one does)*
+2. **What is the difference between the embedding layer and the transformer layers? Which one does the "thinking"?**
+3. **There are two uses of embeddings. Name them and explain the difference.**
+4. **What is RAG? Explain the setup phase and the query phase separately.**
+5. **You previously thought RAG was about privacy/local hosting. Why was that wrong? What is RAG actually about?**
+6. **RAG vs fine-tuning vs retraining — when would you use each?**
+7. **What is the core difference between a search engine and an LLM?**
+8. **Can a search engine hallucinate? Can an LLM? Why?**
+9. **Why do LLMs seem intelligent? Give a deeper answer than "lots of data." *(Hint: 4 reasons)*
+10. **What is "emergence" in the context of LLMs?**
+11. **Why does code use more tokens than English text of the same visible length?**
+12. **What is cosine similarity? Why does vector search use it instead of simple distance?**
+13. **A user queries "lightweight concurrency" and the DB has "Go supports goroutines." Will cosine similarity match them? Why?**

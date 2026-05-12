@@ -695,3 +695,35 @@ Not a priority to understand deeply right now, but important to know it exists.
 **AI engineer vs ML researcher:** Build products with AI (engineer) vs build new AI models (researcher). You want engineer.
 
 **The thinking question:** "Where is intelligence happening?" — forces you to understand what your code does vs what the model does.
+
+---
+
+## Revision Questions
+
+Test yourself. Cover the answers and try to explain each one before looking.
+
+### Core Concepts
+1. **What is inference? How is it different from training?**
+2. **LLMs are stateless. Explain what that means and how chat apps create the illusion of memory.**
+3. **What is a system prompt? Give an example and explain when it runs.**
+4. **Draw the lifecycle of a single API request: from prompt to response.** *(system prompt → user message → ? → ? → response)*
+
+### Model Mechanics
+5. **What does "7B parameters" mean? How does parameter count affect quality, speed, and memory?**
+6. **Explain the attention cost formula. Why does doubling context length more than double the cost?**
+7. **What is quantization? Why does an 8B model fit in 5 GB when the math says it should need 16 GB?**
+8. **Why do small models hallucinate more than large models?**
+
+### API & Engineering
+9. **What is streaming and why does it improve UX even though total generation time is the same?**
+10. **What does `max_tokens` control? What happens if you set it too low? Too high?**
+11. **Why do output tokens cost 2-4x more than input tokens?**
+12. **Local vs cloud inference — name 3 advantages of each.**
+13. **The Ollama API and OpenAI API use the same message format. What are the three roles?**
+
+### Thinking & Design
+14. **What is the difference between an AI engineer and an ML researcher? Which are you learning to be?**
+15. **"Where is intelligence happening?" — answer this for a chatbot that uses RAG.**
+16. **A small model + good RAG vs a large model + no retrieval. Which wins and why?**
+17. **What is the "build path" for learning AI engineering?** *(chatbot → ? → ? → ?)*
+18. **Why is prompt engineering the highest-leverage skill for an AI engineer?**
