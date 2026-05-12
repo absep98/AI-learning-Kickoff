@@ -7,7 +7,7 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 ## Current Focus
 
 **Phase:** Month 1 - Foundation And First AI Tool  
-**Current Day:** Day 5 (complete) → Day 6 next  
+**Current Day:** Day 6 (complete) → Day 7 next  
 **Main Goal:** Build terminal chatbot (first real code that calls an LLM).
 
 ## Progress Summary
@@ -48,7 +48,15 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 | Consumer→builder mindset | ✅ Complete |
 | AI engineer stack | ✅ Complete |
 | Day 5 complete | ✅ (deep reading session) |
-| Terminal chatbot | 🔲 Day 6 |
+| Ollama installed + running | ✅ Complete |
+| Local inference observed | ✅ Complete (token-by-token generation, speed) |
+| Memory test (proved stateless) | ✅ Complete (model forgot "My fav language is Go") |
+| Small model limitations | ✅ Complete (hallucination, weak code, verbose) |
+| Prompt sensitivity (hands-on) | ✅ Complete (plain vs persona prompting) |
+| Chat UI = HTTP API wrapper | ✅ Complete |
+| Compound AI system formula | ✅ Complete (Model + Retrieval + Tools + Memory + UI) |
+| Day 6 complete | ✅ (hands-on Ollama experiments) |
+| Terminal chatbot | 🔲 Day 7 |
 
 ## Day 1 - LLM Basics
 
@@ -356,3 +364,34 @@ This was a theory-heavy period but important. The biggest insight: LLMs being st
 Ready to move from reading to building. Next: actually write code that calls an LLM.
 
 **Day 5 Status:** ✅ Complete
+
+## Day 6 - Hands-On Ollama Experiments
+
+**Date:** May 12, 2026
+
+### What Happened
+
+Installed Ollama, pulled `phi3:mini`, and ran real experiments locally. Watched token-by-token generation, tested memory (failed), tested code generation (hallucinated), and observed prompt sensitivity firsthand. Also attempted the Gemini API via code — didn't work, but the local experiments delivered massive learning.
+
+### Key Concepts Learned (Hands-On)
+
+1. **Local inference is visible** — watched tokens generate one by one on CPU. Now inference speed, token costs, and context window limits are tangible, not theoretical.
+2. **Memory proved fake** — told model "My favorite language is Go", asked later, it forgot. Proves: memory is an app-level feature, not a model feature. Apps re-send full history every time.
+3. **Small model hallucination** — BFS code had wrong symbols (#), verbose output, bloated logic. Fewer parameters = fewer patterns = more guessing.
+4. **Prompt sensitivity observed** — "Explain Redis" vs "Explain Redis like a senior backend engineer" gave completely different outputs from the same model. The prompt IS the interface.
+5. **Chat UI demystified** — the terminal chat is just HTTP POST to localhost:11434/api/generate → JSON response. Any code can replace it.
+6. **Compound AI system formula** — Model + Retrieval + Tools + Memory + UI = modern AI product. Raw LLM alone is not a product.
+7. **Cloud vs local speed** — cloud feels instant because of GPU clusters, batching, parallel hardware. Local CPU processes tokens sequentially.
+8. **Phase 2 entered** — shifted from "I know the words" to "I understand the system" through hands-on experimentation.
+
+### Day 6 Reflection
+
+This was the most important day so far. Everything from Days 01-05 was theoretical. Today, concepts became real:
+- I SAW tokens being generated one at a time
+- I PROVED the model has no memory
+- I OBSERVED hallucination in code
+- I FELT the difference between a generic prompt and a good prompt
+
+The model is just an HTTP API server. The "intelligence" is in the weights. The "product" is the engineering around it.
+
+**Day 6 Status:** ✅ Complete
