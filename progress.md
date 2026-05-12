@@ -34,9 +34,18 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 | Inference lifecycle | ✅ Complete |
 | LLM statelessness | ✅ Complete |
 | System prompts | ✅ Complete |
+| Prompt engineering | ✅ Complete (persona, format, instruction control) |
 | API parameters | ✅ Complete (temperature, max_tokens, model, stream) |
 | Local vs cloud inference | ✅ Complete |
+| Ollama HTTP API | ✅ Complete (generate + chat endpoints, request format) |
 | Model parameters (B) | ✅ Complete |
+| Streaming | ✅ Complete |
+| Output token control | ✅ Complete |
+| Attention cost (n²) | ✅ Complete |
+| Semantic search concept | ✅ Complete (the "aha moment" example) |
+| Quantization | ✅ Noted (learn deeper later) |
+| Free API alternatives | ✅ Complete |
+| Consumer→builder mindset | ✅ Complete |
 | AI engineer stack | ✅ Complete |
 | Day 5 complete | ✅ (deep reading session) |
 | Terminal chatbot | 🔲 Day 6 |

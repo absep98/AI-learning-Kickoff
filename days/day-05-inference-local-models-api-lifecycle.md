@@ -313,6 +313,327 @@ The trap: consuming content about advanced topics creates an illusion of underst
 
 ---
 
+## 10. The Consumer → Builder Transition
+
+This is a mindset shift, not a technical concept, but it is the most important lesson from this reading.
+
+```
+"AI consumer"  = using ChatGPT, watching AI videos, reading threads
+"AI builder"   = writing code that calls AI, building systems with AI components
+```
+
+The danger zone: endlessly consuming AI content instead of building tiny systems. After Days 01–04, the theory is sufficient. The next learning happens BY building, not by reading more.
+
+### The learning trap
+
+```
+Watch: "What is RAG?"
+Watch: "Advanced RAG"  
+Watch: "Agentic RAG"
+Watch: "Graph RAG"
+Watch: "Agent Swarm"
+Watch: "Multi-Agent Memory"
+```
+
+Result: zero RAG systems built, infinite intellectual spaghetti.
+
+The fix: build basic retrieval FIRST, then advanced concepts become obvious because you have context.
+
+---
+
+## 11. Prompt Engineering — Shaping Outputs Through Prompts
+
+Prompt engineering is not just "asking questions nicely." It is a core skill for AI engineers that determines whether your AI app produces useful output or garbage.
+
+### Persona Prompting
+
+The same question produces completely different outputs depending on how you frame the prompt:
+
+```
+"Explain Redis" → generic textbook answer
+
+"Explain Redis like a pirate" → fun, memorable, different vocabulary
+"Explain Redis like a senior engineer" → concise, technical, opinionated  
+"Explain Redis like a 5 year old" → simple analogies, no jargon
+"Explain Redis like a startup founder" → business value focused
+```
+
+This teaches: **prompts shape outputs dramatically.** The model's knowledge doesn't change — only its expression changes based on the instructions you give it.
+
+### Format Control
+
+You can instruct the model to respond in specific formats:
+
+```
+"Always respond in JSON"
+"Give exactly 3 bullet points"
+"Use markdown tables"
+"Answer in one sentence only"
+```
+
+This is critical for building real apps — your code needs to parse the AI's output, so controlling the format is an engineering requirement, not a nice-to-have.
+
+### The "No Fluff" Pattern
+
+```
+System: "You are a no-nonsense senior engineer. Answer in 2 bullet points max. No fluff."
+User: "What is temperature in LLMs?"
+```
+
+Produces tight, useful output instead of five paragraphs of padding. This pattern matters for chatbots, APIs, and any situation where concise answers are better.
+
+---
+
+## 12. Ollama HTTP API — How Local Models Serve Requests
+
+Ollama is not just a CLI tool. It runs a local HTTP server at `http://localhost:11434` that any code can call — just like calling a cloud API.
+
+### The generate endpoint
+
+```
+POST http://localhost:11434/api/generate
+```
+
+Request body:
+
+```json
+{
+  "model": "phi3:mini",
+  "prompt": "Explain goroutines simply",
+  "stream": false,
+  "options": {
+    "temperature": 0.7,
+    "num_predict": 200
+  }
+}
+```
+
+### Key parameters
+
+| Parameter | What it does |
+| --- | --- |
+| `model` | Which local model to use |
+| `prompt` | Your input text |
+| `stream` | `false` = wait for full response. `true` = token-by-token streaming |
+| `temperature` | Same as cloud APIs — controls randomness |
+| `num_predict` | Max output tokens. Ollama's equivalent of `max_tokens` |
+
+### The chat endpoint (for multi-turn)
+
+```
+POST http://localhost:11434/api/chat
+```
+
+```json
+{
+  "model": "phi3:mini",
+  "messages": [
+    { "role": "system", "content": "You are a Go expert." },
+    { "role": "user", "content": "What is a goroutine?" },
+    { "role": "assistant", "content": "A goroutine is a lightweight thread..." },
+    { "role": "user", "content": "How is it different from OS threads?" }
+  ],
+  "stream": false
+}
+```
+
+This is the SAME message format as OpenAI, Anthropic, and Google APIs. Learn it once, use it everywhere.
+
+### Why this matters
+
+Your code doesn't know or care whether the LLM is running locally or in the cloud. The HTTP request/response pattern is identical. This is why Ollama is great for learning — you can prototype locally, then swap to a cloud API later by just changing the URL and adding an API key.
+
+---
+
+## 13. Streaming — Token-by-Token Response Delivery
+
+When you use ChatGPT and see words appearing one at a time, that is **streaming**.
+
+### Without streaming (stream: false)
+
+```
+You send prompt → wait 5 seconds → get complete response all at once
+```
+
+Simple but feels slow to the user.
+
+### With streaming (stream: true)
+
+```
+You send prompt → instantly start receiving tokens → words appear one by one
+```
+
+The model generates the same output either way. Streaming just shows each token as it is generated instead of waiting for the whole response.
+
+### Why streaming matters for apps
+
+- **Better UX** — users see progress immediately instead of staring at a loading spinner
+- **Perceived speed** — even though total time is the same, it *feels* faster
+- **Early cancellation** — user can stop generation if the response is going wrong
+- **Local inference** — when running models locally, you can FEEL the token-by-token generation. This is educational because you literally see the model "thinking" one token at a time
+
+### Implementation
+
+Streaming is slightly more complex to implement because you receive a stream of chunks instead of one response object. But it is a standard pattern in all LLM SDKs.
+
+---
+
+## 14. Output Token Control — What Happens When You Limit Tokens
+
+Setting `max_tokens: 50` or `num_predict: 50` forces the model to stop generating after 50 tokens, even mid-sentence.
+
+```
+max_tokens: 20  → "A goroutine is a lightweight concurrent"  (cut off)
+max_tokens: 200 → full, complete explanation
+max_tokens: 2000 → detailed essay with examples
+```
+
+### Why this matters practically
+
+- **Cost control** — output tokens cost money (cloud APIs charge per token)
+- **Speed** — fewer output tokens = faster response
+- **API design** — if your chatbot should give short answers, limit tokens
+- **Truncation is real** — set it too low and the response gets cut mid-thought. The model does not know its limit in advance — it just gets stopped
+
+### The cost formula
+
+```
+Total cost = (input_tokens × input_price) + (output_tokens × output_price)
+```
+
+Output tokens are usually 2-4x more expensive than input tokens. Controlling output length is a direct cost lever.
+
+---
+
+## 15. The Semantic Search "Aha Moment" — When Embeddings Click
+
+This example from the reading is the most important intuition-builder for embeddings:
+
+### Store these three facts:
+
+```
+"Go supports goroutines"
+"Redis is in-memory"
+"Java uses JVM"
+```
+
+### Now query:
+
+```
+"Which language has lightweight threads?"
+```
+
+### Result:
+
+```
+"Go supports goroutines"  ← MATCH
+```
+
+**No keyword overlap.** The query says "lightweight threads." The stored fact says "goroutines." Zero shared words. But embeddings understand that goroutines ARE lightweight threads because the vectors are close in meaning space.
+
+This is the moment embeddings stop being abstract math and become a real, useful tool. This is also the foundation of RAG — finding relevant information by meaning, not by keyword matching.
+
+### Why this is brain-changing
+
+If you can only search by keywords, you need the user to know the exact terminology. If you search by embeddings, the user can describe what they want in their own words and still find the right answer. This is the difference between a dumb search bar and an intelligent retrieval system.
+
+---
+
+## 16. Free Alternatives for API Access
+
+Since cloud APIs cost money and local models need hardware, here are free options:
+
+| Option | What it is | Best for |
+| --- | --- | --- |
+| Google AI Studio | Web playground for Gemini models | Quick experiments, no code needed |
+| Google Colab | Free cloud notebooks with GPU access | Running Python experiments |
+| Kaggle Notebooks | Similar to Colab, free GPU | Experimenting with models |
+| Groq free tier | Free API with fast inference | API-based experiments |
+| Hugging Face Inference | Free API for open models | Testing various models |
+| OpenRouter free models | API gateway, some free models | Trying different providers |
+| Ollama (local) | Run models on your own machine | Full control, no rate limits |
+
+**Important:** "Completely unlimited free API forever" does not exist because inference costs real money. Free tiers have rate limits and quotas. But they are more than enough for learning.
+
+---
+
+## 17. The Thinking Framework — "Where Is Intelligence Happening?"
+
+While building, constantly ask:
+
+```
+"Where exactly is intelligence happening here?"
+```
+
+This question separates:
+- **Framework user** — "I called the API and got a response, cool"
+- **System thinker** — "The intelligence is in the transformer layers processing attention between tokens. My code just sends text and receives text. The 'smart' part is the model weights, not my code."
+
+This matters because:
+- When something goes wrong, you know WHERE to debug (prompt? model choice? context? temperature?)
+- When designing systems, you know which parts are deterministic (your code) and which are probabilistic (the model)
+- When evaluating AI products, you can tell whether the "AI" is real or just a wrapper around an API call
+
+---
+
+## 18. Attention Cost — Why Bigger Context Windows Are Expensive
+
+Inside the transformer, every token attends to every other token. This is called **self-attention**.
+
+For a context of `n` tokens, the computation is roughly proportional to `n²`.
+
+```
+100 tokens  → 10,000 attention computations
+1,000 tokens → 1,000,000 attention computations
+10,000 tokens → 100,000,000 attention computations
+```
+
+This is why:
+- 128K context windows are expensive
+- Long prompts slow things down
+- Stuffing irrelevant text into context wastes money AND degrades quality
+- RAG (retrieving only relevant chunks) is more efficient than dumping everything in
+
+### Practical implication
+
+When you run a model locally and paste a huge prompt, you will literally FEEL the slowdown. Inference time increases noticeably with prompt length. This makes context window costs tangible instead of theoretical.
+
+---
+
+## 19. Small Models Hallucinate More — Why Retrieval Matters
+
+When experimenting with small local models (Phi-3 Mini, Gemma 2B, TinyLlama):
+
+- They are faster and lighter
+- But they hallucinate MORE than large models
+- They have less "knowledge" compressed in their weights
+- They are more sensitive to prompt quality
+
+This is actually educational because it teaches:
+
+> **Why retrieval + tools matter.** A small model + good retrieval (RAG) can outperform a large model with no retrieval.
+
+The production pattern is not "use the biggest model." It is "use the right-sized model + give it the right context."
+
+---
+
+## 20. Quantization — Making Models Fit on Normal Hardware
+
+Mentioned in the reading but marked as "learn later." Brief note for reference:
+
+**Quantization** = compressing model weights from high precision (32-bit floats) to lower precision (8-bit, 4-bit integers). This makes models smaller and faster at the cost of some quality.
+
+```
+Original Llama 8B:  ~16 GB (full precision)
+Quantized Llama 8B: ~5 GB  (4-bit quantized)
+```
+
+When you download a model through Ollama, you are typically getting a quantized version. That is why a "8B parameter" model fits in 5-8 GB of RAM instead of requiring 16+ GB.
+
+Not a priority to understand deeply right now, but important to know it exists.
+
+---
+
 ## Key Takeaways
 
 **Inference** = using a trained model to generate output. This is what happens every API call.
@@ -321,13 +642,31 @@ The trap: consuming content about advanced topics creates an illusion of underst
 
 **System prompts** = behavior shaping instructions. They define your AI product's personality and constraints.
 
-**Local vs cloud** = trade-off between cost/privacy (local) and power/convenience (cloud). Both are useful for learning.
+**Prompt engineering** = persona prompting, format control, and instruction design. Prompts shape outputs dramatically — same model, different prompt, completely different response.
+
+**Local vs cloud** = trade-off between cost/privacy (local) and power/convenience (cloud). Both use the same HTTP request pattern.
 
 **Model size** = parameters. More parameters = smarter but slower and heavier. Pick the right size for the task.
+
+**Streaming** = delivering response tokens one-by-one instead of waiting for the full response. Better UX, same total time.
+
+**Output token control** = limiting response length for cost, speed, and design reasons. Output tokens cost 2-4x more than input tokens.
+
+**Attention cost** = attention computation grows with n². Bigger context = exponentially more work. This is why RAG beats brute-force context stuffing.
+
+**Semantic search** = embedding-based search finds results by meaning, not keywords. "Lightweight threads" matches "goroutines" because the vectors are close.
+
+**Small models + retrieval** = a small model with good RAG can outperform a large model with no retrieval. The production pattern is right-sized model + right context.
+
+**Quantization** = compressing model weights to fit on normal hardware. Ollama models are usually quantized.
+
+**Consumer → builder** = stop watching AI videos, start building tiny systems. Theory after building sticks 10x better.
 
 **The AI engineer stack** = prompting + APIs + embeddings + vector DBs + RAG + structured output. This is the high-leverage skillset.
 
 **Build path** = chatbot → semantic search → RAG → knowledge assistant. Each phase makes the next one make sense.
+
+**The thinking question** = "Where exactly is intelligence happening?" Separates framework users from system thinkers.
 
 ---
 
@@ -339,6 +678,20 @@ The trap: consuming content about advanced topics creates an illusion of underst
 
 **System prompt:** An instruction that shapes HOW the model behaves before the user says anything.
 
+**Prompt engineering:** Persona, format, and instruction control — the single biggest lever for output quality.
+
+**Streaming:** Token-by-token delivery that makes responses feel instant even though total generation time is the same.
+
+**max_tokens:** Output length limiter — set too low and responses get cut mid-sentence, set right and you control cost and speed.
+
+**Attention cost:** Every token attends to every other token — n² growth — which is why context window size directly impacts speed and cost.
+
+**Semantic search:** Finding information by meaning, not keywords — "lightweight threads" matches "goroutines" because embedding vectors are close.
+
+**Quantization:** Compressing model weights so a 16 GB model fits in 5 GB — why Ollama models run on normal laptops.
+
 **Parameters:** The billions of trained weights inside a model — more = smarter but heavier.
 
 **AI engineer vs ML researcher:** Build products with AI (engineer) vs build new AI models (researcher). You want engineer.
+
+**The thinking question:** "Where is intelligence happening?" — forces you to understand what your code does vs what the model does.
