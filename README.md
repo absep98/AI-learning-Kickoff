@@ -37,7 +37,8 @@ I learn something every day, write it up in plain language, and commit it here. 
 | [Day 05](days/day-05-inference-local-models-api-lifecycle.md) | Inference, Local Models, API Lifecycle | Statelessness, system prompts, API params, local vs cloud, model sizes, AI engineer stack |
 | [Day 06](days/day-06-hands-on-ollama-experiments.md) | Hands-On Ollama Experiments | Local inference observed, memory proved fake, small model limits, prompt sensitivity, compound AI systems |
 | [Day 07](days/day-07-pipeline-hands-on.md) | Pipeline Made Real | Tokenization with tiktoken, embeddings with all-minilm, cosine similarity proved, chat vs embedding models |
-| Day 08 | Terminal Chatbot | *(coming next)* |
+| [Day 08](days/day-08-terminal-chatbot.md) | Terminal Chatbot | Built a streaming chatbot with Ollama, statelessness solved, system prompts, 4-step chat loop |
+| Day 09 | *(coming next)* | |
 
 *(This table grows as I progress.)*
 
