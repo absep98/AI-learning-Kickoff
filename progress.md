@@ -7,8 +7,8 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 ## Current Focus
 
 **Phase:** Month 1 - Foundation And First AI Tool  
-**Current Day:** Day 6 (complete) → Day 7 next  
-**Main Goal:** Build terminal chatbot (first real code that calls an LLM).
+**Current Day:** Day 10 (complete) → Day 11 next  
+**Main Goal:** Completed RAG system. Next: expand RAG to read real files, or move to structured output.
 
 ## Progress Summary
 
@@ -56,7 +56,12 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 | Chat UI = HTTP API wrapper | ✅ Complete |
 | Compound AI system formula | ✅ Complete (Model + Retrieval + Tools + Memory + UI) |
 | Day 6 complete | ✅ (hands-on Ollama experiments) |
-| Terminal chatbot | 🔲 Day 7 |
+| Terminal chatbot | ✅ Complete (Day 08) |
+| Tokenization hands-on (tiktoken) | ✅ Complete (Day 07) |
+| Embeddings hands-on (all-minilm) | ✅ Complete (Day 07) |
+| Pooling concept | ✅ Complete (Day 09) |
+| Semantic search | ✅ Complete (Day 09) |
+| RAG system | ✅ Complete (Day 10) |
 
 ## Day 1 - LLM Basics
 
