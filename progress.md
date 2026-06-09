@@ -64,9 +64,21 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 | RAG system | ✅ Complete (Day 10) |
 | Chunking strategy | ✅ Complete (Day 11) |
 | RAG over real files | ✅ Complete (Day 11) |
+| Chunk filter (min length) | ✅ Complete (Day 11) |
+| Retrieval miss diagnosis | ✅ Complete (Day 11) |
 | Persistent embeddings | ✅ Complete (Day 12) |
 | Source tracking | ✅ Complete (Day 12) |
 | Retrieval debugging | ✅ Complete (Day 12) |
+| Source deduplication | ✅ Complete (Day 12) |
+| Score threshold (refuse low-confidence) | ✅ Complete (Day 12) |
+| Corpus exclusion (SKIP_FILES) | ✅ Complete (Day 12) |
+| Retrieval vs generation quality separation | ✅ Complete (Day 12) |
+| Day 7 complete | ✅ (pipeline hands-on: tokenization + embeddings) |
+| Day 8 complete | ✅ (terminal chatbot) |
+| Day 9 complete | ✅ (semantic search) |
+| Day 10 complete | ✅ (RAG system) |
+| Day 11 complete | ✅ (RAG over real notes, chunking) |
+| Day 12 complete | ✅ (RAG production improvements) |
 
 ## Day 1 - LLM Basics
 
