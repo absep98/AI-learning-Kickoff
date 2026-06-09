@@ -40,7 +40,8 @@ I learn something every day, write it up in plain language, and commit it here. 
 | [Day 08](days/day-08-terminal-chatbot.md) | Terminal Chatbot | Built a streaming chatbot with Ollama, statelessness solved, system prompts, 4-step chat loop |
 | [Day 09](days/day-09-semantic-search.md) | Semantic Search | Embedding-based retrieval, cosine ranking, pooling concept, same-model rule, the retrieval half of RAG |
 | [Day 10](days/day-10-rag.md) | RAG | Combined semantic search + chatbot, context injection, two-model architecture, grounded answers from documents |
-| Day 11 | *(coming next)* | |
+| [Day 11](days/day-11-rag-over-notes.md) | RAG Over Real Notes | Chunking strategy, filtering, 467 chunks from real notes, retrieval quality debugging |
+| Day 12 | *(coming next)* | |
 
 *(This table grows as I progress.)*
 

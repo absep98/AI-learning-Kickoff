@@ -134,6 +134,8 @@ Learn:
 
 Build:
 
+- ✅ Toy RAG with hardcoded documents (Day 10)
+- **RAG over real files** — read `days/*.md`, chunk by paragraph, embed chunks, search your own notes (Day 11)
 - Chat with project docs.
 - Chat with PDFs.
 - Internal knowledge-base assistant.

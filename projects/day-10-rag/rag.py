@@ -49,8 +49,9 @@ while True:
     for doc, doc_vector in embeddings.items():
         score = cosine_similarity(query_vector, doc_vector)
         results.append((doc, score))
-
+    print(results)
     results.sort(key=lambda x: x[1], reverse=True)
+    print(results)
     context = "\n".join([doc for doc,score in results[:3]])
 
     user_message = f"Use only the context below to answer.\n\nContext:\n{context}\n\nQuestion: {query}"

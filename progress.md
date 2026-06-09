@@ -7,8 +7,8 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 ## Current Focus
 
 **Phase:** Month 1 - Foundation And First AI Tool  
-**Current Day:** Day 10 (complete) → Day 11 next  
-**Main Goal:** Completed RAG system. Next: expand RAG to read real files, or move to structured output.
+**Current Day:** Day 11 (complete) → Day 12 next
+**Main Goal:** Completed RAG over real notes. Next: persistent embeddings or structured JSON output.
 
 ## Progress Summary
 
@@ -62,6 +62,8 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 | Pooling concept | ✅ Complete (Day 09) |
 | Semantic search | ✅ Complete (Day 09) |
 | RAG system | ✅ Complete (Day 10) |
+| Chunking strategy | ✅ Complete (Day 11) |
+| RAG over real files | ✅ Complete (Day 11) |
 
 ## Day 1 - LLM Basics
 
