@@ -41,7 +41,8 @@ I learn something every day, write it up in plain language, and commit it here. 
 | [Day 09](days/day-09-semantic-search.md) | Semantic Search | Embedding-based retrieval, cosine ranking, pooling concept, same-model rule, the retrieval half of RAG |
 | [Day 10](days/day-10-rag.md) | RAG | Combined semantic search + chatbot, context injection, two-model architecture, grounded answers from documents |
 | [Day 11](days/day-11-rag-over-notes.md) | RAG Over Real Notes | Chunking strategy, filtering, 467 chunks from real notes, retrieval quality debugging |
-| Day 12 | *(coming next)* | |
+| [Day 12](days/day-12-rag-improved.md) | RAG Improved | Persistent cache, source tracking, deduplication, score threshold, retrieval vs generation debugging |
+| Day 13 | *(coming next)* | |
 
 *(This table grows as I progress.)*
 
