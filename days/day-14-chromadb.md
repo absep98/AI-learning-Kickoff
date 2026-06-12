@@ -79,9 +79,14 @@ Creates (or opens) a database stored in the `./chroma_db` folder. Works like SQL
 
 ### Collection — the table
 ```python
-collection = client.get_or_create_collection(name="ai_notes")
+collection = client.get_or_create_collection(
+    name="ai_notes",
+    metadata={"hnsw:space": "cosine"}  # IMPORTANT: use cosine distance
+)
 ```
 A collection is like a table in a relational database. It stores documents, their embeddings, and any metadata. `get_or_create_collection` opens it if it exists or creates it if not.
+
+**Critical:** ChromaDB defaults to **L2 (Euclidean) distance**. For text embeddings, you almost always want **cosine distance** — set `metadata={"hnsw:space": "cosine"}`. Without this, distance values are in a completely different range and your threshold checks will break.
 
 ### Adding documents
 ```python

@@ -27,7 +27,10 @@ client = chromadb.PersistentClient(path="./chroma_db")
 
 # get or create a collection like a table in db
 
-collection = client.get_or_create_collection(name="ai_notes")
+collection = client.get_or_create_collection(
+    name="ai_notes",
+    metadata={"hnsw:space": "cosine"}  # use cosine distance, not L2
+)
 
 if collection.count() == 0:
     print("Populating chromaDB...")
@@ -80,9 +83,9 @@ while True:
     metas = results["metadatas"][0]
     distances = results["distances"][0]
 
-    # Distance < 0.6 means relevant (lower distance = more similar in ChromaDB)
-    if distances[0] > 0.6:
-        print("\nAI: I don't have relevant information about that in my notes.")
+    # Cosine distance: lower = more similar. Refuse if best match > 0.75
+    if distances[0] > 0.75:
+        print("AI: I don't have relevant information about that in my notes.")
         continue
 
     print("\nRetrieved chunks:")
