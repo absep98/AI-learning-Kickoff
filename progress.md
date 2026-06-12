@@ -7,8 +7,8 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 ## Current Focus
 
 **Phase:** Month 1 - Foundation And First AI Tool  
-**Current Day:** Day 13 (complete) → Day 14 next
-**Main Goal:** Structured JSON output from RAG. Next: Month 2 — real cloud APIs and proper vector database.
+**Current Day:** Day 14 (complete) → Day 15 next
+**Main Goal:** ChromaDB replacing JSON cache. Next: cloud APIs (Gemini/OpenAI).
 
 ## Progress Summary
 
@@ -76,6 +76,10 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 | Structured JSON output | ✅ Complete (Day 13) |
 | Format compliance handling | ✅ Complete (Day 13) |
 | Day 13 complete | ✅ (structured output) |
+| ChromaDB vector database | ✅ Complete (Day 14) |
+| HNSW index concept | ✅ Complete (Day 14) |
+| Distances vs scores | ✅ Complete (Day 14) |
+| Day 14 complete | ✅ (ChromaDB) |
 | Day 7 complete | ✅ (pipeline hands-on: tokenization + embeddings) |
 | Day 8 complete | ✅ (terminal chatbot) |
 | Day 9 complete | ✅ (semantic search) |
