@@ -7,8 +7,8 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 ## Current Focus
 
 **Phase:** Month 1 - Foundation And First AI Tool  
-**Current Day:** Day 12 (complete) → Day 13 next
-**Main Goal:** RAG system production-quality. Next: structured JSON output or Month 2.
+**Current Day:** Day 13 (complete) → Day 14 next
+**Main Goal:** Structured JSON output from RAG. Next: Month 2 — real cloud APIs and proper vector database.
 
 ## Progress Summary
 
@@ -73,6 +73,9 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 | Score threshold (refuse low-confidence) | ✅ Complete (Day 12) |
 | Corpus exclusion (SKIP_FILES) | ✅ Complete (Day 12) |
 | Retrieval vs generation quality separation | ✅ Complete (Day 12) |
+| Structured JSON output | ✅ Complete (Day 13) |
+| Format compliance handling | ✅ Complete (Day 13) |
+| Day 13 complete | ✅ (structured output) |
 | Day 7 complete | ✅ (pipeline hands-on: tokenization + embeddings) |
 | Day 8 complete | ✅ (terminal chatbot) |
 | Day 9 complete | ✅ (semantic search) |

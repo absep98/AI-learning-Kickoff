@@ -5,7 +5,7 @@ import math
 
 OLLAMA_URL_EMBEDDING = "http://localhost:11434/api/embed"
 MODEL = "all-minilm"
-CACHE_FILE = "./embeddings.json" 
+CACHE_FILE = r"C:\learning\aithings\projects\day-12-rag-improved\embeddings.json"
 
 SKIP_FILES = {"day-11-rag-over-notes.md", "day-12-rag-improved.md"}
 
@@ -95,23 +95,33 @@ while True:
     user_message = f"Use only the context below to answer.\n\nContext:\n{context}\n\nQuestion: {query}"
 
     conversation_history = [
-        {"role": "system", "content": "You are a helpful assistant. Answer only from the provided context."},
+        {"role": "system", "content": "You are a helpful assistant. Answer only from the provided context. You MUST respond with ONLY a valid JSON object in this exact format, no other text: {\"answer\": \"your answer here\", \"confidence\": \"high or medium or low\"}"},
         {"role": "user", "content": user_message}
     ]
 
     response = requests.post(
         "http://localhost:11434/api/chat",
-        json={"model": "phi3:mini", "messages": conversation_history, "stream": True},
-        stream=True
+        json={"model": "phi3:mini", "messages": conversation_history, "stream": False},
+        stream=False
     )
 
     print("\nAI: ", end="", flush=True)
-    full_response = response.json()["message"]["content"]
-    parsed = json.loads(full_response)
-    print(f"\nAnswer: {parsed['answer']}")
-    print(f"Confidence: {parsed['confidence']}")
-    print(f"Sources: {', '.join(sources)}")
-
-
-
+    full_response = response.json()["message"]["content"].strip()
+    # Strip markdown code fences if model wraps JSON in ```json ... ```
+    if full_response.startswith("```"):
+        full_response = full_response.split("```")[-2] if "```" in full_response else full_response
+        full_response = full_response.lstrip("json").strip()
+    # Extract just the JSON object if model added extra text after it
+    start = full_response.find("{")
+    end = full_response.rfind("}") + 1
+    if start != -1 and end > start:
+        full_response = full_response[start:end]
+    try:
+        parsed = json.loads(full_response)
+        print(f"\nAnswer: {parsed['answer']}")
+        print(f"Confidence: {parsed['confidence']}")
+        print(f"Sources: {', '.join(sources)}")
+    except (json.JSONDecodeError, KeyError):
+        print(f"\n[Model did not return valid JSON. Raw response:]")
+        print(full_response)
     print()

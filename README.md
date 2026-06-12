@@ -42,7 +42,8 @@ I learn something every day, write it up in plain language, and commit it here. 
 | [Day 10](days/day-10-rag.md) | RAG | Combined semantic search + chatbot, context injection, two-model architecture, grounded answers from documents |
 | [Day 11](days/day-11-rag-over-notes.md) | RAG Over Real Notes | Chunking strategy, filtering, 467 chunks from real notes, retrieval quality debugging |
 | [Day 12](days/day-12-rag-improved.md) | RAG Improved | Persistent cache, source tracking, deduplication, score threshold, retrieval vs generation debugging |
-| Day 13 | *(coming next)* | |
+| [Day 13](days/day-13-structured-output.md) | Structured JSON Output | System prompt format control, stream:false, JSON parsing, format compliance, computed confidence |
+| Day 14 | *(coming next)* | |
 
 *(This table grows as I progress.)*
 
