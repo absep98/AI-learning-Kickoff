@@ -7,8 +7,8 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 ## Current Focus
 
 **Phase:** Month 1 - Foundation And First AI Tool  
-**Current Day:** Day 14 (complete) → Day 15 next
-**Main Goal:** ChromaDB replacing JSON cache. Next: cloud APIs (Gemini/OpenAI).
+**Current Day:** Day 15 (complete) → Day 16 next
+**Main Goal:** Cloud API integrated. Full stack: all-minilm + ChromaDB + Groq/Llama. Next: error handling, rate limits, or git-ai-summary project.
 
 ## Progress Summary
 
@@ -80,6 +80,10 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 | HNSW index concept | ✅ Complete (Day 14) |
 | Distances vs scores | ✅ Complete (Day 14) |
 | Day 14 complete | ✅ (ChromaDB) |
+| Cloud API integration (Groq) | ✅ Complete (Day 15) |
+| API key management (.env, .gitignore) | ✅ Complete (Day 15) |
+| OpenAI-compatible format | ✅ Complete (Day 15) |
+| Day 15 complete | ✅ (cloud API, Groq + Llama) |
 | Day 7 complete | ✅ (pipeline hands-on: tokenization + embeddings) |
 | Day 8 complete | ✅ (terminal chatbot) |
 | Day 9 complete | ✅ (semantic search) |
