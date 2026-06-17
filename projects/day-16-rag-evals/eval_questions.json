@@ -1,0 +1,157 @@
+[
+    {
+        "id": 1,
+        "question": "What temperature setting should I use for coding tasks?",
+        "expected_answer": "0.1-0.3",
+        "expected_sources": [
+            "day-02-temperature-context-embeddings.md"
+        ]
+    },
+    {
+        "id": 2,
+        "question": "What is cosine similarity?",
+        "expected_answer": "measures angle between vectors",
+        "expected_sources": []
+    },
+    {
+        "id": 3,
+        "question": "What are the main components of a RAG system?",
+        "expected_answer": "retrieval, generation, embeddings",
+        "expected_sources": [
+            "day-11-rag-over-notes.md"
+        ]
+    },
+    {
+        "id": 4,
+        "question": "What does embedding dimensionality mean?",
+        "expected_answer": "number of dimensions",
+        "expected_sources": []
+    },
+    {
+        "id": 5,
+        "question": "What is the purpose of chunking in RAG?",
+        "expected_answer": "split documents into smaller pieces",
+        "expected_sources": [
+            "day-11-rag-over-notes.md"
+        ]
+    },
+    {
+        "id": 6,
+        "question": "What is ChromaDB used for?",
+        "expected_answer": "vector database",
+        "expected_sources": [
+            "day-14-chromadb.md"
+        ]
+    },
+    {
+        "id": 7,
+        "question": "What cloud API did we use for generation?",
+        "expected_answer": "Groq",
+        "expected_sources": [
+            "day-15-cloud-api.md"
+        ]
+    },
+    {
+        "id": 8,
+        "question": "What model did we use for embeddings?",
+        "expected_answer": "all-minilm",
+        "expected_sources": [
+            "day-11-rag-over-notes.md",
+            "day-14-chromadb.md"
+        ]
+    },
+    {
+        "id": 9,
+        "question": "What is the difference between chunking and tokenization?",
+        "expected_answer": "chunking splits documents tokenization subwords",
+        "expected_sources": [
+            "day-11-rag-over-notes.md"
+        ]
+    },
+    {
+        "id": 10,
+        "question": "What is context window?",
+        "expected_answer": "short-term working memory text tokens",
+        "expected_sources": [
+            "day-02-temperature-context-embeddings.md"
+        ]
+    },
+    {
+        "id": 11,
+        "question": "What temperature should I use for creative writing?",
+        "expected_answer": "high temperature creative",
+        "expected_sources": [
+            "day-02-temperature-context-embeddings.md"
+        ]
+    },
+    {
+        "id": 12,
+        "question": "What is HNSW in ChromaDB?",
+        "expected_answer": "Hierarchical Navigable Small World",
+        "expected_sources": [
+            "day-14-chromadb.md"
+        ]
+    },
+    {
+        "id": 13,
+        "question": "What distance metric should you use for text embeddings in ChromaDB?",
+        "expected_answer": "cosine",
+        "expected_sources": [
+            "day-14-chromadb.md"
+        ]
+    },
+    {
+        "id": 14,
+        "question": "What is the purpose of structured output?",
+        "expected_answer": "JSON predictable format",
+        "expected_sources": [
+            "day-13-structured-output.md"
+        ]
+    },
+    {
+        "id": 15,
+        "question": "What LLM did Groq use in our system?",
+        "expected_answer": "Llama 3.1",
+        "expected_sources": [
+            "day-15-cloud-api.md"
+        ]
+    },
+    {
+        "id": 16,
+        "question": "Why use local embeddings with cloud generation?",
+        "expected_answer": "cost privacy local",
+        "expected_sources": [
+            "day-15-cloud-api.md"
+        ]
+    },
+    {
+        "id": 17,
+        "question": "What does top-k mean in retrieval?",
+        "expected_answer": "most similar results",
+        "expected_sources": []
+    },
+    {
+        "id": 18,
+        "question": "What is the default distance metric in ChromaDB?",
+        "expected_answer": "L2",
+        "expected_sources": [
+            "day-14-chromadb.md"
+        ]
+    },
+    {
+        "id": 19,
+        "question": "What does temperature=0 do?",
+        "expected_answer": "deterministic stable",
+        "expected_sources": [
+            "day-02-temperature-context-embeddings.md"
+        ]
+    },
+    {
+        "id": 20,
+        "question": "What is the benefit of persistent ChromaDB storage?",
+        "expected_answer": "persistent similarity search indexed",
+        "expected_sources": [
+            "day-14-chromadb.md"
+        ]
+    }
+]

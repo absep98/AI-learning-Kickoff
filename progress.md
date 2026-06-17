@@ -7,8 +7,8 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 ## Current Focus
 
 **Phase:** Month 1 - Foundation And First AI Tool  
-**Current Day:** Day 15 (complete) → Day 16 next
-**Main Goal:** Cloud API integrated. Full stack: all-minilm + ChromaDB + Groq/Llama. Next: error handling, rate limits, or git-ai-summary project.
+**Current Day:** Day 16 (complete) → Day 17 next
+**Main Goal:** Eval system built. Exposed RAG gaps (Day 11 skipped, Day 14/15 underrepresented). 5% baseline established. Next: fix SKIP_FILES, improve retrieval, or build git-ai-summary.
 
 ## Progress Summary
 
@@ -90,6 +90,12 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 | Day 10 complete | ✅ (RAG system) |
 | Day 11 complete | ✅ (RAG over real notes, chunking) |
 | Day 12 complete | ✅ (RAG production improvements) |
+| RAG evaluation system | ✅ Complete (Day 16) |
+| Automated testing (20 questions) | ✅ Complete (Day 16) |
+| Answer matching strategy | ✅ Complete (Day 16) |
+| Source validation | ✅ Complete (Day 16) |
+| Pass rate baseline (5%) | ✅ Complete (Day 16) |
+| Day 16 complete | ✅ (RAG evals) |
 
 ## Day 1 - LLM Basics
 

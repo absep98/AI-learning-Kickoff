@@ -11,7 +11,7 @@ groq_client = Groq(api_key=os.environ["GROQ_API_KEY"])
 OLLAMA_URL_EMBEDDING = "http://localhost:11434/api/embed"
 MODEL = "all-minilm"
 
-SKIP_FILES = {"day-11-rag-over-notes.md", "day-12-rag-improved.md"}
+SKIP_FILES = {"day-12-rag-improved.md"}  # day-11 re-included so chunking/RAG questions work
 
 def load_chunks(folder_path):
     chunks = []
@@ -68,12 +68,11 @@ else:
     print(f"Loaded {collection.count()} chunks from chromaDB.")
 
 
-while True:
-
-    query = input("\nYou: ").strip()
-    if not query or query == "quit":
-        break
-
+def query_rag(query):
+    """
+    Query the RAG system and return structured response
+    Returns: dict with keys 'answer', 'confidence', 'sources'
+    """
     query_resp = requests.post(OLLAMA_URL_EMBEDDING, json={"model": MODEL, "input": query})
     query_vector = query_resp.json()["embeddings"][0]
 
@@ -90,16 +89,13 @@ while True:
 
     # Cosine distance: lower = more similar. Refuse if best match > 0.75
     if distances[0] > 0.75:
-        print("AI: I don't have relevant information about that in my notes.")
-        continue
-
-    print("\nRetrieved chunks:")
-    for text, meta, dist in zip(texts, metas, distances):
-        print(f"  [dist={dist:.3f}] ({meta['source']}) {text[:80]}...")
+        return {
+            "answer": "I don't have relevant information about that in my notes.",
+            "confidence": "none",
+            "sources": []
+        }
 
     sources = list(set([m["source"] for m in metas]))
-    print(f"Sources: {', '.join(sources)}")
-
     context = "\n\n".join(texts)
 
     response = groq_client.chat.completions.create(
@@ -111,22 +107,47 @@ while True:
     )
     full_response = response.choices[0].message.content.strip()
 
-    print("\nAI: ", end="", flush=True)
     # Strip markdown code fences if model wraps JSON in ```json ... ```
     if full_response.startswith("```"):
         full_response = full_response.split("```")[-2] if "```" in full_response else full_response
         full_response = full_response.lstrip("json").strip()
+    
     # Extract just the JSON object if model added extra text after it
     start = full_response.find("{")
     end = full_response.rfind("}") + 1
     if start != -1 and end > start:
         full_response = full_response[start:end]
+    
     try:
         parsed = json.loads(full_response)
-        print(f"\nAnswer: {parsed['answer']}")
-        print(f"Confidence: {parsed['confidence']}")
-        print(f"Sources: {', '.join(sources)}")
+        return {
+            "answer": parsed.get("answer", ""),
+            "confidence": parsed.get("confidence", "unknown"),
+            "sources": sources
+        }
     except (json.JSONDecodeError, KeyError):
-        print(f"\n[Model did not return valid JSON. Raw response:]")
-        print(full_response)
-    print()
+        return {
+            "answer": full_response,
+            "confidence": "error",
+            "sources": sources
+        }
+
+
+def interactive_loop():
+    """Run interactive query loop"""
+    while True:
+        query = input("\nYou: ").strip()
+        if not query or query == "quit":
+            break
+
+        result = query_rag(query)
+        
+        print("\nAI:")
+        print(f"Answer: {result['answer']}")
+        print(f"Confidence: {result['confidence']}")
+        print(f"Sources: {', '.join(result['sources'])}")
+        print()
+
+
+if __name__ == "__main__":
+    interactive_loop()

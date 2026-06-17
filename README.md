@@ -45,7 +45,7 @@ I learn something every day, write it up in plain language, and commit it here. 
 | [Day 13](days/day-13-structured-output.md) | Structured JSON Output | System prompt format control, stream:false, JSON parsing, format compliance, computed confidence |
 | [Day 14](days/day-14-chromadb.md) | ChromaDB Vector Database | PersistentClient, collection, HNSW index, cosine distance, JSON file replaced |
 | [Day 15](days/day-15-cloud-api.md) | Cloud API (Groq + Llama) | Replaced local phi3:mini with Groq, API key management, retrieval vs generation independence |
-| Day 16 | *(coming next)* | |
+| [Day 16](days/day-16-rag-evals.md) | RAG Evals | Automated testing with 20 questions, answer/source validation, 5% baseline established, system gaps exposed |
 
 *(This table grows as I progress.)*
 

@@ -59,7 +59,7 @@ full_response = response.choices[0].message.content.strip()
 ```
 User query
     ↓
-all-minilm (local, Ollama)       ← embeds the query
+all-minilm (local, Ollama)       ← embeds the query into a 384-dim vector
     ↓
 ChromaDB (local, persistent)     ← finds top 5 chunks by cosine distance
     ↓
@@ -68,7 +68,11 @@ Llama 3.1 8B (cloud, Groq)       ← generates answer from retrieved context
 JSON parsed → Answer + Confidence + Sources
 ```
 
-Two local components (embedding + vector DB), one cloud component (generation). This is the common production pattern — embeddings and vector storage are cheap to run locally or on cheap hardware; generation benefits most from a large capable model.
+**Exact model used:** `llama-3.1-8b-instant` on Groq. This is the specific model name passed to `groq_client.chat.completions.create(model="llama-3.1-8b-instant", ...)`.
+
+**Exact embedding model used:** `all-minilm` via Ollama locally. Same model as Day 11/14 — unchanged.
+
+**Why local embeddings + cloud generation?** Embeddings are cheap to run locally (all-minilm is tiny, fast, no GPU needed). Generation is where quality matters most — a large cloud model like Llama 3.1 8B reads the retrieved chunks far more accurately than a small local model. So: local embeddings for cost/privacy, cloud generation for quality.
 
 ---
 
