@@ -193,6 +193,57 @@ Success signal:
 
 ## Six-Month Roadmap
 
+## Post Day 16 Continuation Options
+
+These are the next tracks after completing Day 16 (RAG evals):
+
+### Option A: Improve RAG To 80%+
+
+Goal: increase eval pass rate from current baseline by improving retrieval and answer faithfulness.
+
+Tasks:
+
+- Improve retrieval ranking (semantic + keyword overlap).
+- Tune prompt for exact values/model names from context.
+- Add retrieval debug output for failed eval questions.
+- Re-run eval after each change and track score movement.
+
+Success signal:
+
+- Eval pass rate reaches 80% or higher on the 20-question set.
+
+### Option B: Build git-ai-summary CLI
+
+Goal: apply structured-output + cloud API skills to a practical developer tool.
+
+Tasks:
+
+- Read git diff/commit text.
+- Generate summary, risk list, and test suggestions.
+- Output strict JSON and handle API errors.
+
+Success signal:
+
+- Tool reliably summarizes real diffs with actionable risks/tests.
+
+### Option C: Start Month 2 Workflow Topics
+
+Goal: move from single-call apps to AI coding workflows.
+
+Tasks:
+
+- Add conversation memory strategies.
+- Introduce tool-calling loop patterns.
+- Add safety limits and observability for multi-step runs.
+
+Success signal:
+
+- You can build a controlled multi-step assistant workflow.
+
+### Active Next Step
+
+- Current choice: **Option B (Build git-ai-summary CLI)**.
+
 ## Month 1: Foundation And First AI Tool
 
 Theme: learn by building your first small AI utility.

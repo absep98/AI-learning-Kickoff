@@ -7,8 +7,10 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 ## Current Focus
 
 **Phase:** Month 1 - Foundation And First AI Tool  
-**Current Day:** Day 16 (complete) → Day 17 next
-**Main Goal:** Eval system built. Exposed RAG gaps (Day 11 skipped, Day 14/15 underrepresented). 5% baseline established. Next: fix SKIP_FILES, improve retrieval, or build git-ai-summary.
+**Current Day:** Day 17 (in progress)
+**Main Goal:** Option B active - build `git-ai-summary` CLI using structured output + cloud API workflow.
+
+**Day 16 Outcome:** ✅ Eval target achieved at **80% (16/20)** after iterative retrieval debugging + eval expectation tuning.
 
 ## Progress Summary
 

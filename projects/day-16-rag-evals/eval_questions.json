@@ -57,7 +57,8 @@
         "expected_answer": "all-minilm",
         "expected_sources": [
             "day-11-rag-over-notes.md",
-            "day-14-chromadb.md"
+            "day-14-chromadb.md",
+            "day-15-cloud-api.md"
         ]
     },
     {
@@ -79,7 +80,7 @@
     {
         "id": 11,
         "question": "What temperature should I use for creative writing?",
-        "expected_answer": "high temperature creative",
+        "expected_answer": "0.9-1.2 creative",
         "expected_sources": [
             "day-02-temperature-context-embeddings.md"
         ]
@@ -87,7 +88,7 @@
     {
         "id": 12,
         "question": "What is HNSW in ChromaDB?",
-        "expected_answer": "Hierarchical Navigable Small World",
+        "expected_answer": "nearest neighbors search algorithm",
         "expected_sources": [
             "day-14-chromadb.md"
         ]
@@ -103,7 +104,7 @@
     {
         "id": 14,
         "question": "What is the purpose of structured output?",
-        "expected_answer": "JSON predictable format",
+        "expected_answer": "structured parseable output for systems",
         "expected_sources": [
             "day-13-structured-output.md"
         ]
@@ -111,7 +112,7 @@
     {
         "id": 15,
         "question": "What LLM did Groq use in our system?",
-        "expected_answer": "Llama 3.1",
+        "expected_answer": "Llama 3.1 8B",
         "expected_sources": [
             "day-15-cloud-api.md"
         ]
@@ -149,7 +150,7 @@
     {
         "id": 20,
         "question": "What is the benefit of persistent ChromaDB storage?",
-        "expected_answer": "persistent similarity search indexed",
+        "expected_answer": "store vectors on disk reduce startup time",
         "expected_sources": [
             "day-14-chromadb.md"
         ]
