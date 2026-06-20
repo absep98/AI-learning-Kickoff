@@ -53,3 +53,24 @@ Before tool loops and agent orchestration, memory boundaries prevent confusion, 
 - Steps taken: Read progress.md and roadmap.md, extract completed items and pending items, then summarize.
 - Stop reason: Required files were found and task objective was met.
 - Logged output summary: Intent captured, 2 file reads executed, completion/pending list generated, final response delivered.
+
+## Pseudocode: Controlled Tool-Calling Loop
+
+```text
+max_steps = 8
+for step in 1..max_steps:
+    intent = get_user_intent()
+    if intent is empty: stop("missing input")
+
+    context = load_context(session_history, attachments, allowed_memories)
+    plan = model_plan_next_action(intent, context)
+
+    result = execute_tool_with_retry(plan.tool, plan.args, retries=3)
+    log_step(step, intent, plan, result)
+
+    if result.meets_success_criteria: respond_and_stop(result.summary)
+    if user_requested_stop(): stop("user quit")
+
+respond_with_progress("step limit reached", collected_logs)
+```
+    
