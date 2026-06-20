@@ -212,19 +212,24 @@ Success signal:
 
 - Eval pass rate reaches 80% or higher on the 20-question set.
 
-### Option B: Build git-ai-summary CLI
+### Option B: Build git-ai-summary CLI ✅ COMPLETE (Day 17)
 
 Goal: apply structured-output + cloud API skills to a practical developer tool.
 
 Tasks:
 
-- Read git diff/commit text.
-- Generate summary, risk list, and test suggestions.
-- Output strict JSON and handle API errors.
+- ✅ Read git diff/commit text (unstaged/staged/both modes)
+- ✅ Generate summary, risk list, and commit message suggestions
+- ✅ Output strict JSON and handle API errors with fallbacks
+- ✅ CLI mode support with `python git_ai_summary.py [mode]`
+- ✅ Groq integration with llama-3.1-8b-instant
+- ✅ Robust JSON parsing with markdown fence handling
 
 Success signal:
 
-- Tool reliably summarizes real diffs with actionable risks/tests.
+- ✅ Tool reliably summarizes real diffs with actionable risks/tests
+- ✅ End-to-end tested across all modes
+- ✅ Error handling and graceful degradation working
 
 ### Option C: Start Month 2 Workflow Topics
 

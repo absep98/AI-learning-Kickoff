@@ -7,10 +7,11 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 ## Current Focus
 
 **Phase:** Month 1 - Foundation And First AI Tool  
-**Current Day:** Day 17 (in progress)
-**Main Goal:** Option B active - build `git-ai-summary` CLI using structured output + cloud API workflow.
+**Current Day:** Day 18 (next)
+**Main Goal:** Option C - Build domain-specific prompt library or advanced RAG features.
 
 **Day 16 Outcome:** ✅ Eval target achieved at **80% (16/20)** after iterative retrieval debugging + eval expectation tuning.
+**Day 17 Outcome:** ✅ CLI tool complete with mode support, Groq integration, structured JSON output, and robust error handling.
 
 ## Progress Summary
 
@@ -98,6 +99,11 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 | Source validation | ✅ Complete (Day 16) |
 | Pass rate baseline (5%) | ✅ Complete (Day 16) |
 | Day 16 complete | ✅ (RAG evals) |
+| Git diff capture (subprocess) | ✅ Complete (Day 17) |
+| Structured JSON output + Groq | ✅ Complete (Day 17) |
+| Mode support (unstaged/staged/both) | ✅ Complete (Day 17) |
+| CLI error handling + fallbacks | ✅ Complete (Day 17) |
+| Day 17 complete | ✅ (git-ai-summary CLI) |
 
 ## Day 1 - LLM Basics
 
