@@ -247,7 +247,8 @@ Success signal:
 
 ### Active Next Step
 
-- Current choice: **Option B (Build git-ai-summary CLI)**.
+- Current choice: **Option C (Start Month 2 Workflow Topics)**.
+- Day 18 first task: Define conversation memory strategy for a controlled assistant workflow.
 
 ## Month 1: Foundation And First AI Tool
 
