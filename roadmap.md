@@ -248,7 +248,8 @@ Success signal:
 ### Active Next Step
 
 - Current choice: **Option C (Start Month 2 Workflow Topics)**.
-- Day 18 first task: Define conversation memory strategy for a controlled assistant workflow.
+- Day 18 status: Memory strategy + controlled runnable loop prototype completed.
+- Next task: Connect one real model call and one real tool call into the existing loop with the same safety limits.
 
 ## Month 1: Foundation And First AI Tool
 

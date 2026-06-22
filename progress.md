@@ -7,11 +7,12 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 ## Current Focus
 
 **Phase:** Month 1 - Foundation And First AI Tool  
-**Current Day:** Day 18 (next)
-**Main Goal:** Option C - Build domain-specific prompt library or advanced RAG features.
+**Current Day:** Day 19 (next)
+**Main Goal:** Option C continuation - integrate real model/tool wiring on top of the Day 18 loop foundation.
 
 **Day 16 Outcome:** ✅ Eval target achieved at **80% (16/20)** after iterative retrieval debugging + eval expectation tuning.
 **Day 17 Outcome:** ✅ CLI tool complete with mode support, Groq integration, structured JSON output, and robust error handling.
+**Day 18 Outcome:** ✅ Controlled tool-calling loop prototype complete with retry policy, structured logs, and one-shot/multi-turn toggle.
 
 ## Progress Summary
 
@@ -104,6 +105,11 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 | Mode support (unstaged/staged/both) | ✅ Complete (Day 17) |
 | CLI error handling + fallbacks | ✅ Complete (Day 17) |
 | Day 17 complete | ✅ (git-ai-summary CLI) |
+| Memory strategy boundaries | ✅ Complete (Day 18) |
+| Tool-calling loop rules | ✅ Complete (Day 18) |
+| Runnable mock loop prototype | ✅ Complete (Day 18) |
+| One-shot/multi-turn mode toggle | ✅ Complete (Day 18) |
+| Day 18 complete | ✅ (workflow topics foundation) |
 
 ## Day 1 - LLM Basics
 

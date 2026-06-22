@@ -73,4 +73,27 @@ for step in 1..max_steps:
 
 respond_with_progress("step limit reached", collected_logs)
 ```
-    
+
+## Part 4: Runnable Mock Loop
+
+- Input source: user prompt from terminal input.
+- Max steps: 8.
+- Retry count: 3 per tool call.
+- Stop conditions: success, user quit, step limit reached.
+- Log fields: step, intent, action, result, next decision.
+- Final output summary: completed actions, pending items, stop reason.
+
+## Part 5: Implementation Snapshot (Completed)
+
+- Implemented runnable prototype in `projects/day-18-workflow-topics/mock_loop.py`.
+- Added `StepLog` dataclass for structured per-step observability.
+- Added action planner (`plan_action`) for intent-to-action routing.
+- Added retry wrapper (`execute_with_retry`) with 3-attempt transient failure handling.
+- Added configurable mode toggle (`ONE_SHOT_MODE`) to switch between one-shot and multi-turn behavior.
+- Added final reporting block with completed actions, pending items, stop reason, and detailed step logs.
+
+## Test Evidence
+
+- Syntax validation passed via `python -m py_compile .\\mock_loop.py`.
+- Multi-turn run validated with sequence: `progress` -> `failonce summarize status` -> `missing input` -> `quit`.
+- Observed expected outcome: accumulated completed actions across turns and terminated with `stop reason: user quit`.
