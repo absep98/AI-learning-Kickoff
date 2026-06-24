@@ -1,10 +1,22 @@
 from dataclasses import dataclass
+import os
+from pathlib import Path
+
+from dotenv import load_dotenv
+from groq import Groq
 
 
 MAX_STEPS = 8
 RETRY_COUNT = 3
 ONE_SHOT_MODE = False
+USE_REAL_MODEL_PLANNER = True
+USE_REAL_TOOL_EXECUTOR = True
+ALLOWED_ACTIONS = {"read_progress_files", "summarize_status", "ask_clarification"}
 
+load_dotenv(r"C:\learning\aithings\.env")
+api_key = os.getenv("GROQ_API_KEY")
+groq_client = Groq(api_key=api_key) if api_key else None
+REPO_ROOT = Path(r"C:\learning\aithings")
 
 @dataclass
 class StepLog: 
@@ -37,15 +49,82 @@ def mock_tool_call(action, intent, attempt_number):
     
     return {"ok": "true", "message": "Need more details from user"}
 
+
+def real_tool_call(action):
+    if action == "read_progress_files":
+        progress_path = REPO_ROOT / "progress.md"
+        roadmap_path = REPO_ROOT / "roadmap.md"
+        try:
+            progress_text = progress_path.read_text(encoding="utf-8")
+            roadmap_text = roadmap_path.read_text(encoding="utf-8")
+            return {
+                "ok": "true",
+                "message": (
+                    f"Read progress.md ({len(progress_text)} chars) and "
+                    f"roadmap.md ({len(roadmap_text)} chars)"
+                ),
+            }
+        except OSError as err:
+            return {"ok": "false", "message": f"file read error: {err}"}
+
+    if action == "summarize_status":
+        progress_path = REPO_ROOT / "progress.md"
+        try:
+            lines = progress_path.read_text(encoding="utf-8").splitlines()
+            focus_line = next((ln for ln in lines if ln.startswith("**Current Day:**")), "**Current Day:** unknown")
+            goal_line = next((ln for ln in lines if ln.startswith("**Main Goal:**")), "**Main Goal:** unknown")
+            return {"ok": "true", "message": f"Status summary prepared: {focus_line} | {goal_line}"}
+        except OSError as err:
+            return {"ok": "false", "message": f"file read error: {err}"}
+
+    return {"ok": "true", "message": "Need more details from user"}
+
 def execute_with_retry(action, intent):
     response = {"ok": "false", "message": "no attempts made"}
     for attempt_number in range(1, RETRY_COUNT + 1):
-        response = mock_tool_call(action, intent, attempt_number)
+        if "failonce" in intent and attempt_number == 1:
+            response = {"ok": "false", "message": "temporary timeout"}
+        elif USE_REAL_TOOL_EXECUTOR:
+            response = real_tool_call(action)
+        else:
+            response = mock_tool_call(action, intent, attempt_number)
+
         if response.get("ok") == "true":
             return response
 
     return response
         
+def model_plan_action(intent, context):
+    if not groq_client:
+        return plan_action(intent)
+
+    try:
+        response = groq_client.chat.completions.create(
+            model="llama-3.1-8b-instant",
+            temperature=0,
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        "You are an action planner. Return ONLY one action string from this set: "
+                        "read_progress_files, summarize_status, ask_clarification. "
+                        "No JSON, no explanation."
+                    ),
+                },
+                {"role": "user", "content": f"Intent: {intent}\nContext: {context}\n"}
+            ]
+        )
+
+        action = response.choices[0].message.content.strip().lower()
+        action = action.replace("`", "").replace('"', "").replace("'", "")
+        action = action.splitlines()[0].strip()
+
+        if action in ALLOWED_ACTIONS:
+            return action
+
+        return plan_action(intent)
+    except Exception:
+        return plan_action(intent)
 
 def run_mock_loop():
     logs = []
@@ -81,7 +160,20 @@ def run_mock_loop():
             stop_reason = "user quit"
             break
 
-        action = plan_action(prompt)
+        previous_action = logs[-1].action if logs else "none"
+        context = (
+            f"step={i}; previous_action={previous_action}; "
+            f"allowed_actions={', '.join(sorted(ALLOWED_ACTIONS))}"
+        )
+
+        if USE_REAL_MODEL_PLANNER:
+            action = model_plan_action(prompt, context)
+        else:
+            action = plan_action(prompt)
+
+        if action not in ALLOWED_ACTIONS:
+            action = "ask_clarification"
+
         response = execute_with_retry(action, prompt)
 
         if action != "ask_clarification" and response.get("ok") == "true":

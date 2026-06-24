@@ -7,12 +7,13 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 ## Current Focus
 
 **Phase:** Month 1 - Foundation And First AI Tool  
-**Current Day:** Day 19 (next)
-**Main Goal:** Option C continuation - integrate real model/tool wiring on top of the Day 18 loop foundation.
+**Current Day:** Day 20 (next)
+**Main Goal:** Option C continuation - expand real tool actions and strengthen planner observability.
 
 **Day 16 Outcome:** ✅ Eval target achieved at **80% (16/20)** after iterative retrieval debugging + eval expectation tuning.
 **Day 17 Outcome:** ✅ CLI tool complete with mode support, Groq integration, structured JSON output, and robust error handling.
 **Day 18 Outcome:** ✅ Controlled tool-calling loop prototype complete with retry policy, structured logs, and one-shot/multi-turn toggle.
+**Day 19 Outcome:** ✅ Real model planner + real tool executor integrated with action guardrails and fallback safety.
 
 ## Progress Summary
 
@@ -110,6 +111,10 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 | Runnable mock loop prototype | ✅ Complete (Day 18) |
 | One-shot/multi-turn mode toggle | ✅ Complete (Day 18) |
 | Day 18 complete | ✅ (workflow topics foundation) |
+| Real model planner integration | ✅ Complete (Day 19) |
+| Real tool executor integration | ✅ Complete (Day 19) |
+| Allowed-action guardrails | ✅ Complete (Day 19) |
+| Day 19 complete | ✅ (planner + executor milestone) |
 
 ## Day 1 - LLM Basics
 
