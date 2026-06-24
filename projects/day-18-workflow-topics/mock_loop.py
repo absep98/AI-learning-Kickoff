@@ -131,25 +131,33 @@ def execute_with_retry(action, intent):
 
     return {**response, "attempts": attempt_number}
         
-def model_plan_action(intent, context):
+def model_plan_action(intent, context, history=None):
     if not groq_client:
         return plan_action(intent)
 
     try:
+        messages = [
+            {
+                "role": "system",
+                "content": (
+                    "You are an action planner. Return ONLY one action string from this set: "
+                    "read_progress_files, summarize_status, check_git_status, ask_clarification. "
+                    "No JSON, no explanation."
+                ),
+            },
+        ]
+
+        # Add previous steps as conversation history so model has memory
+        for h in (history or []):
+            messages.append({"role": "user", "content": h["intent"]})
+            messages.append({"role": "assistant", "content": h["action"]})
+
+        messages.append({"role": "user", "content": f"Intent: {intent}\nContext: {context}\n"})
+
         response = groq_client.chat.completions.create(
             model="llama-3.1-8b-instant",
             temperature=0,
-            messages=[
-                {
-                    "role": "system",
-                    "content": (
-                        "You are an action planner. Return ONLY one action string from this set: "
-                        "read_progress_files, summarize_status, check_git_status, ask_clarification. "
-                        "No JSON, no explanation."
-                    ),
-                },
-                {"role": "user", "content": f"Intent: {intent}\nContext: {context}\n"}
-            ]
+            messages=messages
         )
 
         action = response.choices[0].message.content.strip().lower()
@@ -166,6 +174,7 @@ def model_plan_action(intent, context):
 def run_mock_loop():
     logs = []
     completed_actions = []
+    history = []  # conversation history for model planner
 
     stop_reason = 'step limit reached'
 
@@ -208,7 +217,7 @@ def run_mock_loop():
         )
 
         if USE_REAL_MODEL_PLANNER:
-            action = model_plan_action(prompt, context)
+            action = model_plan_action(prompt, context, history=history)
             planner_source = "model"
         else:
             action = plan_action(prompt)
@@ -240,6 +249,7 @@ def run_mock_loop():
             retry_attempts=retry_attempts,
         )
         logs.append(log)
+        history.append({"intent": prompt, "action": action})
 
         if next_decision == "respond_and_stop":
             break
