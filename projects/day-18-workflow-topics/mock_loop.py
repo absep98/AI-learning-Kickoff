@@ -1,5 +1,7 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
+import json
 import os
+from datetime import datetime
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -17,6 +19,21 @@ load_dotenv(r"C:\learning\aithings\.env")
 api_key = os.getenv("GROQ_API_KEY")
 groq_client = Groq(api_key=api_key) if api_key else None
 REPO_ROOT = Path(r"C:\learning\aithings")
+LOGS_DIR = REPO_ROOT / "projects" / "day-18-workflow-topics" / "run_logs"
+
+
+def persist_logs(logs, completed_actions, stop_reason):
+    LOGS_DIR.mkdir(exist_ok=True)
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    log_file = LOGS_DIR / f"run_{timestamp}.json"
+    payload = {
+        "timestamp": timestamp,
+        "stop_reason": stop_reason,
+        "completed_actions": completed_actions,
+        "steps": [asdict(log) for log in logs],
+    }
+    log_file.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    print(f"\nLogs saved to: {log_file.name}")
 
 @dataclass
 class StepLog: 
@@ -230,7 +247,6 @@ def run_mock_loop():
     pending_items = [
         "connect real model",
         "connect real tools",
-        "persist logs",
     ]
 
     print("\n=== Final Output Summary ===")
@@ -245,6 +261,8 @@ def run_mock_loop():
             f"result={log.result} | next_decision={log.next_decision} | "
             f"planner={log.planner_source} | retries={log.retry_attempts}"
         )
+
+    persist_logs(logs, completed_actions, stop_reason)
 
 if __name__ == "__main__":
     run_mock_loop()
