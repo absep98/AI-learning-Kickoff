@@ -248,8 +248,8 @@ Success signal:
 ### Active Next Step
 
 - Current choice: **Option C (Start Month 2 Workflow Topics)**.
-- Day 19 status: Real model planner + real tool executor integrated with safety guardrails.
-- Next task: Add one additional safe tool action and include action-confidence/decision metadata in step logs.
+- Day 20 status: check_git_status tool added, planner_source and retry_attempts metadata in step logs.
+- Next task: Persist step logs to a JSON file after each run and include conversation history in planner context.
 
 ## Month 1: Foundation And First AI Tool
 

@@ -11,7 +11,7 @@ RETRY_COUNT = 3
 ONE_SHOT_MODE = False
 USE_REAL_MODEL_PLANNER = True
 USE_REAL_TOOL_EXECUTOR = True
-ALLOWED_ACTIONS = {"read_progress_files", "summarize_status", "ask_clarification"}
+ALLOWED_ACTIONS = {"read_progress_files", "summarize_status", "ask_clarification", "check_git_status"}
 
 load_dotenv(r"C:\learning\aithings\.env")
 api_key = os.getenv("GROQ_API_KEY")
@@ -25,6 +25,8 @@ class StepLog:
     action: str
     result: str
     next_decision: str
+    planner_source: str
+    retry_attempts: int
 
 def plan_action(intent):
     intent = intent.lower()
@@ -34,8 +36,11 @@ def plan_action(intent):
 
     if "summarize" in intent or "status" in intent:
         return "summarize_status"
-    else:
-        return "ask_clarification"
+
+    if "git" in intent or "commit" in intent or "branch" in intent:
+        return "check_git_status"
+
+    return "ask_clarification"
 
 def mock_tool_call(action, intent, attempt_number):
     if "failonce" in intent and attempt_number == 1:
@@ -76,6 +81,21 @@ def real_tool_call(action):
             return {"ok": "true", "message": f"Status summary prepared: {focus_line} | {goal_line}"}
         except OSError as err:
             return {"ok": "false", "message": f"file read error: {err}"}
+    
+    if action == "check_git_status":
+        import subprocess
+        try:
+            result = subprocess.run(
+                ["git", "-C", str(REPO_ROOT), "status", "--short"],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            lines = result.stdout.strip()
+            summary = f"{len(lines.splitlines())} changed file(s)" if lines else "working tree clean"
+            return {"ok": "true", "message": f"Git status: {summary}"}
+        except OSError as err:
+            return {"ok": "false", "message": f"git error: {err}"}
 
     return {"ok": "true", "message": "Need more details from user"}
 
@@ -90,9 +110,9 @@ def execute_with_retry(action, intent):
             response = mock_tool_call(action, intent, attempt_number)
 
         if response.get("ok") == "true":
-            return response
+            return {**response, "attempts": attempt_number}
 
-    return response
+    return {**response, "attempts": attempt_number}
         
 def model_plan_action(intent, context):
     if not groq_client:
@@ -107,7 +127,7 @@ def model_plan_action(intent, context):
                     "role": "system",
                     "content": (
                         "You are an action planner. Return ONLY one action string from this set: "
-                        "read_progress_files, summarize_status, ask_clarification. "
+                        "read_progress_files, summarize_status, check_git_status, ask_clarification. "
                         "No JSON, no explanation."
                     ),
                 },
@@ -143,6 +163,8 @@ def run_mock_loop():
                 action= "none",
                 result= "missing input",
                 next_decision= "stop",
+                planner_source= "none",
+                retry_attempts= 0,
             )
             logs.append(log)
             stop_reason = "missing input"
@@ -155,6 +177,8 @@ def run_mock_loop():
                 action= "none",
                 result= "user quit",
                 next_decision= "stop",
+                planner_source= "none",
+                retry_attempts= 0,
             )
             logs.append(log)
             stop_reason = "user quit"
@@ -168,13 +192,16 @@ def run_mock_loop():
 
         if USE_REAL_MODEL_PLANNER:
             action = model_plan_action(prompt, context)
+            planner_source = "model"
         else:
             action = plan_action(prompt)
+            planner_source = "fallback"
 
         if action not in ALLOWED_ACTIONS:
             action = "ask_clarification"
 
         response = execute_with_retry(action, prompt)
+        retry_attempts = response.get("attempts", 1)
 
         if action != "ask_clarification" and response.get("ok") == "true":
             completed_actions.append(action)
@@ -192,6 +219,8 @@ def run_mock_loop():
             action=action,
             result=response.get("message", "no message"),
             next_decision=next_decision,
+            planner_source=planner_source,
+            retry_attempts=retry_attempts,
         )
         logs.append(log)
 
@@ -213,7 +242,8 @@ def run_mock_loop():
     for log in logs:
         print(
             f"step={log.step} | intent={log.intent!r} | action={log.action} | "
-            f"result={log.result} | next_decision={log.next_decision}"
+            f"result={log.result} | next_decision={log.next_decision} | "
+            f"planner={log.planner_source} | retries={log.retry_attempts}"
         )
 
 if __name__ == "__main__":
