@@ -46,6 +46,12 @@ I learn something every day, write it up in plain language, and commit it here. 
 | [Day 14](days/day-14-chromadb.md) | ChromaDB Vector Database | PersistentClient, collection, HNSW index, cosine distance, JSON file replaced |
 | [Day 15](days/day-15-cloud-api.md) | Cloud API (Groq + Llama) | Replaced local phi3:mini with Groq, API key management, retrieval vs generation independence |
 | [Day 16](days/day-16-rag-evals.md) | RAG Evals | Automated testing with 20 questions, answer/source validation, 5% baseline established, system gaps exposed |
+| [Day 17](days/day-17-git-ai-summary.md) | git-ai-summary CLI | Git diff summarizer, Groq JSON output, unstaged/staged/both modes, robust error handling |
+| [Day 18](days/day-18-workflow-topics.md) | Workflow Topics | Memory strategy, tool-calling loop rules, runnable mock loop prototype |
+| [Day 19](days/day-19-real-planner-tool-integration.md) | Real Planner + Tool Integration | Real Groq planner, real tool executor, allowed-action guardrails |
+| [Day 20](days/day-20-decision-metadata-tools.md) | Decision Metadata + Tools | check_git_status tool, planner_source and retry_attempts log metadata |
+| [Day 21](days/day-21-persist-step-logs.md) | Persist Step Logs | Step logs written to timestamped JSON files after each run |
+| [Day 22](days/day-22-planner-conversation-history.md) | Planner Conversation History | Prior steps replayed as chat history so the planner has memory across a run |
 
 *(This table grows as I progress.)*
 

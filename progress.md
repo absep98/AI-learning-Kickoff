@@ -6,15 +6,17 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 
 ## Current Focus
 
-**Phase:** Month 1 - Foundation And First AI Tool  
-**Current Day:** Day 21 (next)
-**Main Goal:** Option C continuation - persist step logs to file and add conversation history to planner context.
+**Phase:** Month 2 - AI Coding Workflow And A Product Feature
+**Current Day:** Day 23 (next)
+**Main Goal:** Option C (controlled multi-step workflow) is complete. Decide: harden the workflow loop further, or move to Month 2's main task — using AI daily and shipping an actual small AI feature in a real app.
 
 **Day 16 Outcome:** ✅ Eval target achieved at **80% (16/20)** after iterative retrieval debugging + eval expectation tuning.
 **Day 17 Outcome:** ✅ CLI tool complete with mode support, Groq integration, structured JSON output, and robust error handling.
 **Day 18 Outcome:** ✅ Controlled tool-calling loop prototype complete with retry policy, structured logs, and one-shot/multi-turn toggle.
 **Day 19 Outcome:** ✅ Real model planner + real tool executor integrated with action guardrails and fallback safety.
 **Day 20 Outcome:** ✅ check_git_status tool added, planner_source + retry_attempts metadata added to all step logs.
+**Day 21 Outcome:** ✅ Step logs persisted to timestamped JSON files in `run_logs/` after every run.
+**Day 22 Outcome:** ✅ Conversation history wired into the model planner's context — decisions now carry memory across steps in a run. Option C success signal ("build a controlled multi-step assistant workflow") met.
 
 ## Progress Summary
 
@@ -120,6 +122,10 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 | planner_source log metadata | ✅ Complete (Day 20) |
 | retry_attempts log metadata | ✅ Complete (Day 20) |
 | Day 20 complete | ✅ (observability + extended tools) |
+| Step logs persisted to timestamped JSON | ✅ Complete (Day 21) |
+| Day 21 complete | ✅ (run log persistence) |
+| Conversation history in planner context | ✅ Complete (Day 22) |
+| Day 22 complete | ✅ (planner memory across steps) |
 
 ## Day 1 - LLM Basics
 
