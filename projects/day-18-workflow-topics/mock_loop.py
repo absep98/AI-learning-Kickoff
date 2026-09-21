@@ -22,6 +22,21 @@ REPO_ROOT = Path(r"C:\learning\aithings")
 LOGS_DIR = REPO_ROOT / "projects" / "day-18-workflow-topics" / "run_logs"
 
 
+def build_final_response(logs, completed_actions, failed_actions=None):
+    if not completed_actions:
+        response = "No actions were completed this run."
+    else:
+        result_by_action = {log.action: log.result for log in logs if log.action in completed_actions}
+        summaries = [f"{action} ({result_by_action[action]})" for action in completed_actions]
+        response = f"Done: {summaries[0]}." if len(summaries) == 1 else "Done: " + "; ".join(summaries) + "."
+
+    if failed_actions:
+        failure_summaries = [f"{f['action']} ({f['message']})" for f in failed_actions]
+        response += " Failed after retries: " + "; ".join(failure_summaries) + "."
+
+    return response
+
+
 def persist_logs(logs, completed_actions, stop_reason):
     LOGS_DIR.mkdir(exist_ok=True)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -174,7 +189,10 @@ def model_plan_action(intent, context, history=None):
 def run_mock_loop():
     logs = []
     completed_actions = []
+    failed_actions = []
     history = []  # conversation history for model planner
+    consecutive_clarifications = 0
+    CLARIFICATION_LIMIT = 2
 
     stop_reason = 'step limit reached'
 
@@ -237,6 +255,8 @@ def run_mock_loop():
             else:
                 next_decision = "continue"
         else:
+            if action != "ask_clarification" and response.get("ok") != "true":
+                failed_actions.append({"action": action, "message": response.get("message", "no message")})
             next_decision = "continue"
 
         log = StepLog(
@@ -254,14 +274,18 @@ def run_mock_loop():
         if next_decision == "respond_and_stop":
             break
 
-    pending_items = [
-        "connect real model",
-        "connect real tools",
-    ]
+        consecutive_clarifications = consecutive_clarifications + 1 if action == "ask_clarification" else 0
+        if consecutive_clarifications >= CLARIFICATION_LIMIT:
+            stop_reason = "repeated ask_clarification"
+            break
+
+    pending_items = []
+    final_response = build_final_response(logs, completed_actions, failed_actions)
 
     print("\n=== Final Output Summary ===")
+    print(f"Response: {final_response}")
     print(f"Completed actions: {completed_actions if completed_actions else ['none']}")
-    print(f"Pending items: {pending_items}")
+    print(f"Pending items: {pending_items if pending_items else ['none']}")
     print(f"Stop reason: {stop_reason}")
 
     print("\n=== Step Logs ===")
