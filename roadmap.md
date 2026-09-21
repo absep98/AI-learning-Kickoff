@@ -254,6 +254,10 @@ Success signal:
 - Option C success signal met: a controlled multi-step assistant workflow is built and working.
 - Day 23 status: loop hardened — natural-language final response built from `completed_actions`, retries that fail after all attempts surface in that response, and the loop stops early after 2 consecutive `ask_clarification` results instead of running all 8 steps.
 - Next task: move to Month 2's main task list — using AI daily in a coding workflow and shipping one actual AI feature in a real app.
+- Day 24 status: built `repo_assistant.py`, combining Day 14's RAG retrieval with tool routing (`check_git_status`) via a rule-based planner — the first real "ship a feature" step under Month 2's main task.
+- Day 25 status: upgraded the planner to a model-based one (Groq, with rule-based fallback) — routes ambiguous phrasing correctly, not just literal keywords.
+- Day 26 status: added `read_progress_files` as a third tool, so progress/day questions are answered from real data instead of RAG guessing.
+- Decision: `repo_assistant.py` is feature-complete as a CLI prototype. Next step is wrapping it in a FastAPI web API + simple frontend and deploying it, so it's a live, demoable feature rather than a local script only — this is the portfolio-facing version of "ship an actual AI feature in a real app."
 
 ## Month 1: Foundation And First AI Tool
 

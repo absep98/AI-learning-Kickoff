@@ -7,8 +7,8 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 ## Current Focus
 
 **Phase:** Month 2 - AI Coding Workflow And A Product Feature
-**Current Day:** Day 25 (next)
-**Main Goal:** Day 24 shipped a real feature combining RAG + tool routing. Decide: keep extending repo_assistant.py (model-based planner, more tools) or start a new Month 2 feature.
+**Current Day:** Day 27 (next)
+**Main Goal:** repo_assistant.py is feature-complete (RAG answers, git status, progress lookup, model-based routing with fallback). Now wrapping it in a FastAPI web API + simple frontend so it's a live, demoable AI feature instead of a CLI script — the portfolio-worthy version of Month 2's goal.
 
 **Day 16 Outcome:** ✅ Eval target achieved at **80% (16/20)** after iterative retrieval debugging + eval expectation tuning.
 **Day 17 Outcome:** ✅ CLI tool complete with mode support, Groq integration, structured JSON output, and robust error handling.
@@ -18,6 +18,9 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 **Day 21 Outcome:** ✅ Step logs persisted to timestamped JSON files in `run_logs/` after every run.
 **Day 22 Outcome:** ✅ Conversation history wired into the model planner's context — decisions now carry memory across steps in a run. Option C success signal ("build a controlled multi-step assistant workflow") met.
 **Day 23 Outcome:** ✅ Loop hardened: stale `pending_items` replaced, a natural-language final response is built from `completed_actions`, retries that fail after all attempts are surfaced in that response, and the loop now stops early after 2 consecutive `ask_clarification` results instead of running all 8 steps.
+**Day 24 Outcome:** ✅ Built `repo_assistant.py` — combines RAG retrieval (from Day 14's ChromaDB collection) with tool routing (`check_git_status`), using a rule-based planner to route between answering questions and running commands. First real "ship a feature" milestone for Month 2.
+**Day 25 Outcome:** ✅ Replaced `repo_assistant.py`'s keyword-only planner with a model-based planner (Groq, temperature 0) that falls back to rule-based routing on invalid/failed responses — verified it correctly routes ambiguous phrasing (e.g. "tell me about my commits") without literal keyword matches.
+**Day 26 Outcome:** ✅ Added a third tool, `read_progress_files`, to `repo_assistant.py` — reads `progress.md` and answers questions about current day/progress directly instead of falling back to RAG hallucination. Planner, prompt, and fallback rules all updated to route to it correctly.
 **Day 24 Outcome:** ✅ Built `repo_assistant.py` — combines RAG retrieval (from Day 14's ChromaDB collection) with tool routing (`check_git_status`), using a rule-based planner to route between answering questions and running commands. First real "ship a feature" milestone for Month 2.
 
 ## Progress Summary
