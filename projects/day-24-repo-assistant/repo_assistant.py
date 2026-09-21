@@ -75,6 +75,15 @@ def answer_question(query):
     answer = response.choices[0].message.content.strip()
     return {"ok": "true", "message": f"{answer} (sources: {', '.join(sources)})"}
 
+def read_progress_files():
+    progress_path = REPO_ROOT / "progress.md"
+    try:
+        lines = progress_path.read_text(encoding="utf-8").splitlines()
+        focus_line = next((ln for ln in lines if ln.startswith("**Current Day:**")), "**Current Day:** unknown")
+        goal_line = next((ln for ln in lines if ln.startswith("**Main Goal:**")), "**Main Goal:** unknown")
+        return {"ok": "true", "message": f"{focus_line} | {goal_line}"}
+    except OSError as err:
+        return {"ok": "false", "message": f"file read error: {err}"}
 
 def check_git_status():
     import subprocess
@@ -92,11 +101,25 @@ def check_git_status():
         return {"ok": "false", "message": f"git error: {err}"}
 
 
+def read_progress_files():
+    progress_path = REPO_ROOT / "progress.md"
+    try:
+        lines = progress_path.read_text(encoding="utf-8").splitlines()
+        focus_line = next((ln for ln in lines if ln.startswith("**Current Day:**")), "**Current Day:** unknown")
+        goal_line = next((ln for ln in lines if ln.startswith("**Main Goal:**")), "**Main Goal:** unknown")
+        return {"ok": "true", "message": f"{focus_line} | {goal_line}"}
+    except OSError as err:
+        return {"ok": "false", "message": f"file read error: {err}"}
+
+
 def plan_action(query):
     query = query.lower()
 
     if "git" in query or "status" in query or "commit" in query or "branch" in query:
         return "check_git_status"
+
+    if "day" in query or "progress" in query or "roadmap" in query:
+        return "read_progress_files"
 
     return "answer_question"
 
@@ -111,8 +134,9 @@ def model_plan_action(intent, context="", history=None):
                 "role": "system",
                 "content": (
                     "You are an action planner. Return ONLY one action string from this set: "
-                    "answer_question, check_git_status. "
+                    "answer_question, check_git_status, read_progress_files. "
                     "Use check_git_status for anything about git, commits, branches, or repo status. "
+                    "Use read_progress_files for questions about current day, progress, or what's next in the learning plan. "
                     "Use answer_question for anything else, including questions about notes or concepts. "
                     "No JSON, no explanation."
                 ),
@@ -157,5 +181,6 @@ if __name__ == "__main__":
             result = answer_question(query)
         elif action == "check_git_status":
             result = check_git_status()
-
+        elif action == "read_progress_files":
+            result = read_progress_files()
         print(result["message"])
