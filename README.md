@@ -55,6 +55,8 @@ I learn something every day, write it up in plain language, and commit it here. 
 
 *(This table grows as I progress.)*
 
+**Days 23+:** in progress — daily write-ups for these aren't written yet. See [`progress.md`](progress.md) for what's actually been built (workflow loop hardening, `repo_assistant.py` with RAG + tool routing, and the plan to wrap it as a deployed web feature).
+
 ## The Learning Approach
 
 ```
