@@ -3,3 +3,6 @@ __pycache__/
 *.pyc
 chroma_db/
 eval_results.json
+node_modules/
+dist/
+*.exe
