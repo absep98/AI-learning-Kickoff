@@ -101,6 +101,50 @@ def plan_action(query):
     return "answer_question"
 
 
+def model_plan_action(intent, context="", history=None):
+    if not groq_client:
+        return plan_action(intent)
+
+    try:
+        messages = [
+            {
+                "role": "system",
+                "content": (
+                    "You are an action planner. Return ONLY one action string from this set: "
+                    "answer_question, check_git_status. "
+                    "Use check_git_status for anything about git, commits, branches, or repo status. "
+                    "Use answer_question for anything else, including questions about notes or concepts. "
+                    "No JSON, no explanation."
+                ),
+            },
+        ]
+
+        # Add previous steps as conversation history so model has memory
+        for h in (history or []):
+            messages.append({"role": "user", "content": h["intent"]})
+            messages.append({"role": "assistant", "content": h["action"]})
+
+        messages.append({"role": "user", "content": f"Intent: {intent}\nContext: {context}\n"})
+
+        response = groq_client.chat.completions.create(
+            model="llama-3.1-8b-instant",
+            temperature=0,
+            messages=messages
+        )
+
+        action = response.choices[0].message.content.strip().lower()
+        action = action.replace("`", "").replace('"', "").replace("'", "")
+        action = action.splitlines()[0].strip()
+
+        if action in ALLOWED_ACTIONS:
+            return action
+
+        return plan_action(intent)
+    except Exception:
+        return plan_action(intent)
+
+
+
 if __name__ == "__main__":
     while True:
         query = input("Ask about your notes: ").strip()
@@ -108,7 +152,7 @@ if __name__ == "__main__":
         if not query or query.lower() in ["quit", "exit"]:
             break
 
-        action = plan_action(query)
+        action = model_plan_action(query)
         if action == "answer_question":
             result = answer_question(query)
         elif action == "check_git_status":
