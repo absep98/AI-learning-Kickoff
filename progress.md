@@ -7,8 +7,8 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 ## Current Focus
 
 **Phase:** Month 2 - AI Coding Workflow And A Product Feature
-**Current Day:** Day 29 (next)
-**Main Goal:** The last real deployment blocker for `assistant.py` is solved — embeddings no longer depend on local Ollama. The FastAPI app can now theoretically run on a cloud server. Next: actually deploy it (Render/Railway) and get a live URL.
+**Current Day:** Day 30 (next)
+**Main Goal:** The Month 2 "ship an actual AI feature in a real app" goal is met — `repo_assistant.py`'s logic is deployed live at https://repo-assistant-api.onrender.com, with all 3 actions (RAG answers, git status, progress lookup) verified working through real public HTTP requests, not just locally.
 
 **Day 16 Outcome:** ✅ Eval target achieved at **80% (16/20)** after iterative retrieval debugging + eval expectation tuning.
 **Day 17 Outcome:** ✅ CLI tool complete with mode support, Groq integration, structured JSON output, and robust error handling.
@@ -23,6 +23,7 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 **Day 26 Outcome:** ✅ Added a third tool, `read_progress_files`, to `repo_assistant.py` — reads `progress.md` and answers questions about current day/progress directly instead of falling back to RAG hallucination. Planner, prompt, and fallback rules all updated to route to it correctly.
 **Day 27 Outcome:** ✅ Built a FastAPI wrapper (`projects/day-27/awesome-project/`) around `repo_assistant.py`'s logic — ported `retrieve_chunks`, `answer_question`, `check_git_status`, `read_progress_files`, and the model-based planner into `assistant.py`, wired to a `POST /ask` endpoint in `main.py`. Verified all 3 actions route and respond correctly via live HTTP requests (not just CLI). Made `REPO_ROOT` and the ChromaDB path environment-variable-configurable as a first step toward real deployment.
 **Day 28 Outcome:** ✅ Replaced the Ollama-dependent embedding call in `retrieve_chunks()` with `sentence-transformers` running the same model (`all-MiniLM-L6-v2`) directly in-process — no local server dependency. Verified retrieval quality is unchanged (distance 0.4552 vs. Ollama's 0.4551 for the same query) despite documents being embedded via Ollama and queries now embedded via `sentence-transformers`. This was the last real blocker before deploying the FastAPI app to a cloud server.
+**Day 29 Outcome:** ✅ Deployed `assistant.py`/`main.py` live on Render (free tier) at https://repo-assistant-api.onrender.com. Solved three real deployment blockers along the way: (1) `requirements.txt` was never committed to git, (2) the ChromaDB collection didn't exist on the fresh server — fixed with self-healing rebuild-from-`days/*.md` logic, (3) `sentence-transformers`/`torch` caused an out-of-memory crash on the 512MB free tier — fixed by switching to Hugging Face's hosted Inference API for embeddings instead of running the model locally. All 3 actions (`answer_question`, `check_git_status`, `read_progress_files`) verified working via real public HTTP requests. Month 2's "ship an actual AI feature in a real app" goal is met.
 
 ## Progress Summary
 

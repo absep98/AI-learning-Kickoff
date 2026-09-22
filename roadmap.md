@@ -261,7 +261,9 @@ Success signal:
 - Day 27 status: built `projects/day-27/awesome-project/` — a FastAPI app (`main.py` + `assistant.py`) wrapping all 3 `repo_assistant.py` actions behind a `POST /ask` endpoint, verified working via live HTTP requests. `REPO_ROOT` and the ChromaDB path are now env-var-configurable for deployment.
 - Remaining before real deployment: the embedding call depends on local Ollama (`localhost:11434`), which won't exist on a deployed server — this needs a cloud-reachable embedding solution (or switching embeddings to Groq/another hosted API) before deploying.
 - Day 28 status: solved the Ollama blocker — replaced the embedding HTTP call with `sentence-transformers` running `all-MiniLM-L6-v2` directly in-process (no server dependency). Verified retrieval quality unchanged despite documents being embedded via Ollama and queries now embedded via `sentence-transformers`.
-- Next task: actually deploy the FastAPI app (Render/Railway/etc.) and get a live URL — the last step to a portfolio-worthy, demoable feature.
+- Day 29 status: **deployed live** to Render at https://repo-assistant-api.onrender.com. Fixed three real deploy blockers: missing `requirements.txt` in git, ChromaDB collection not existing on a fresh server (self-healing rebuild from `days/*.md`), and an out-of-memory crash from `sentence-transformers`/`torch` on the 512MB free tier (fixed by switching to Hugging Face's hosted Inference API for embeddings). All 3 actions verified working via real public HTTP requests.
+- Option C / Month 2 success signal met: an actual AI feature is shipped in a live, deployed, demoable app — not just a local script.
+- Next task: decide what's next — extend this deployed feature further (more tools, a simple frontend), or move to a new Month 2/3 focus.
 
 ## Month 1: Foundation And First AI Tool
 

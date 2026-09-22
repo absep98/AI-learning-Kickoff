@@ -58,10 +58,13 @@ I learn something every day, write it up in plain language, and commit it here. 
 | [Day 26](days/day-26-read-progress-files-tool.md) | Third Tool: read_progress_files | Fixed a real RAG hallucination bug by adding a dedicated tool instead of trusting retrieval |
 | [Day 27](days/day-27-fastapi-wrapper.md) | Wrapping Repo Assistant In A FastAPI Web API | FastAPI fundamentals, ported CLI logic to a POST /ask endpoint, env-var-configurable paths |
 | [Day 28](days/day-28-removing-ollama-dependency.md) | Removing The Ollama Deployment Blocker | Replaced local-only Ollama embedding calls with sentence-transformers running in-process |
+| [Day 29](days/day-29-deploying-to-render.md) | Deploying Repo Assistant Live On Render | Live deployment at repo-assistant-api.onrender.com; fixed OOM crash by switching to a hosted embedding API |
 
 *(This table grows as I progress. Days 23-27 notes were drafted retroactively from actual commits/tests and reviewed before being added here.)*
 
-**Days 29+:** in progress — see [`progress.md`](progress.md) for current status (next: deploy the FastAPI app to get a live, demoable URL).
+**Days 30+:** in progress — see [`progress.md`](progress.md) for current status.
+
+**Live demo:** [repo-assistant-api.onrender.com](https://repo-assistant-api.onrender.com/docs) — a RAG + tool-routing assistant that answers questions about this repo's notes, checks git status, and reports current learning progress.
 
 ## The Learning Approach
 
