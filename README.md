@@ -57,10 +57,11 @@ I learn something every day, write it up in plain language, and commit it here. 
 | [Day 25](days/day-25-model-based-planner.md) | Model-Based Planner For Repo Assistant | Keyword router replaced with a model-based planner, validated fallback safety |
 | [Day 26](days/day-26-read-progress-files-tool.md) | Third Tool: read_progress_files | Fixed a real RAG hallucination bug by adding a dedicated tool instead of trusting retrieval |
 | [Day 27](days/day-27-fastapi-wrapper.md) | Wrapping Repo Assistant In A FastAPI Web API | FastAPI fundamentals, ported CLI logic to a POST /ask endpoint, env-var-configurable paths |
+| [Day 28](days/day-28-removing-ollama-dependency.md) | Removing The Ollama Deployment Blocker | Replaced local-only Ollama embedding calls with sentence-transformers running in-process |
 
 *(This table grows as I progress. Days 23-27 notes were drafted retroactively from actual commits/tests and reviewed before being added here.)*
 
-**Days 28+:** in progress — see [`progress.md`](progress.md) for current status (remaining blocker: local Ollama dependency needs solving before real deployment).
+**Days 29+:** in progress — see [`progress.md`](progress.md) for current status (next: deploy the FastAPI app to get a live, demoable URL).
 
 ## The Learning Approach
 

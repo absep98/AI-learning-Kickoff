@@ -1,42 +1,34 @@
 import os
-import requests
 import chromadb
 from pathlib import Path
 from dotenv import load_dotenv
 from groq import Groq
+from sentence_transformers import SentenceTransformer
 
 load_dotenv(r"C:\learning\aithings\.env")
 
-OLLAMA_URL_EMBEDDING = "http://localhost:11434/api/embed"
-EMBED_MODEL = "all-minilm"
 DISTANCE_THRESHOLD = 0.75
 
 groq_client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+embed_model = SentenceTransformer("all-MiniLM-L6-v2")
 
 client = chromadb.PersistentClient(path=os.getenv("CHROMA_DB_PATH", r"C:\learning\aithings\projects\day-14-chromadb\chroma_db"))
 collection = client.get_collection(name="ai_notes")
 ALLOWED_ACTIONS = {"read_progress_files", "summarize_status", "ask_clarification", "check_git_status", "answer_question"}
 REPO_ROOT = Path(os.getenv("REPO_ROOT", r"C:\learning\aithings"))
-client = chromadb.PersistentClient(path=os.getenv("CHROMA_DB_PATH", r"C:\learning\aithings\projects\day-14-chromadb\chroma_db"))
 
 
 def retrieve_chunks(query, n_results=5):
     """
-    TODO (you write this):
-    1. Call OLLAMA_URL_EMBEDDING with requests.post, same shape as rag_chroma.py:
-       json={"model": EMBED_MODEL, "input": query}
-       Get the vector out of resp.json()["embeddings"][0]
-    2. Call collection.query(query_embeddings=[vector], n_results=n_results,
-       include=["documents", "metadatas", "distances"])
-    3. Pull out texts = results["documents"][0], metas = results["metadatas"][0],
-       distances = results["distances"][0]
-    4. Return (texts, metas, distances) as a tuple.
+    Embeds the query using the local sentence-transformers model (no network
+    call, no Ollama dependency — runs anywhere the Python process runs),
+    then queries ChromaDB for the closest matching note chunks.
 
-    Do NOT call the LLM in here — this function only does retrieval.
+    Returns (texts, metas, distances) — the retrieved chunk text, their
+    source metadata, and cosine distance (lower = more similar) for each.
+    Does NOT call the LLM here — that happens in answer_question().
     """
-    query_resp = requests.post(OLLAMA_URL_EMBEDDING, json={"model": EMBED_MODEL, "input": query})
-    query_vector = query_resp.json()["embeddings"][0]
-
+    query_vector = embed_model.encode(query).tolist()
     results = collection.query(
         query_embeddings=[query_vector],
         n_results=n_results,
@@ -154,3 +146,4 @@ def model_plan_action(intent, context="", history=None):
 if __name__ == "__main__":
     print(check_git_status()["message"])
     print(read_progress_files()["message"])
+    print(retrieve_chunks("what is temperature")[2][0])  # prints the top distance
