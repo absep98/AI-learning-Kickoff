@@ -5,17 +5,58 @@ from dotenv import load_dotenv
 from groq import Groq
 from sentence_transformers import SentenceTransformer
 
-load_dotenv(r"C:\learning\aithings\.env")
+REPO_ROOT = Path(os.getenv("REPO_ROOT", r"C:\learning\aithings"))
+load_dotenv(REPO_ROOT / ".env")
 
 DISTANCE_THRESHOLD = 0.75
+SKIP_FILES = {"day-11-rag-over-notes.md", "day-12-rag-improved.md"}
 
 groq_client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 embed_model = SentenceTransformer("all-MiniLM-L6-v2")
 
 client = chromadb.PersistentClient(path=os.getenv("CHROMA_DB_PATH", r"C:\learning\aithings\projects\day-14-chromadb\chroma_db"))
-collection = client.get_collection(name="ai_notes")
+collection = client.get_or_create_collection(name="ai_notes", metadata={"hnsw:space": "cosine"})
 ALLOWED_ACTIONS = {"read_progress_files", "summarize_status", "ask_clarification", "check_git_status", "answer_question"}
-REPO_ROOT = Path(os.getenv("REPO_ROOT", r"C:\learning\aithings"))
+
+
+def _load_note_chunks():
+    """Read days/*.md and split into paragraph chunks, same approach as rag_chroma.py."""
+    days_folder = REPO_ROOT / "days"
+    chunks = []
+    for path in days_folder.glob("*.md"):
+        if path.name in SKIP_FILES:
+            continue
+        content = path.read_text(encoding="utf-8")
+        paragraphs = content.split("\n\n")
+        chunks.extend([(p.strip(), path.name) for p in paragraphs if p.strip() and len(p.strip()) > 80])
+    return chunks
+
+
+def _build_collection_if_empty():
+    """
+    Self-healing setup: if this ChromaDB collection is empty (e.g. on a freshly
+    deployed server that never had the local chroma_db folder), rebuild it from
+    days/*.md using sentence-transformers — no Ollama, no dependency on a
+    pre-existing database file, so this works on any machine including a
+    deployed server.
+    """
+    if collection.count() > 0:
+        return
+
+    chunks = _load_note_chunks()
+    if not chunks:
+        return
+
+    texts = [text for text, _ in chunks]
+    sources = [source for _, source in chunks]
+    vectors = embed_model.encode(texts).tolist()
+    ids = [str(i) for i in range(len(texts))]
+    metadatas = [{"source": source} for source in sources]
+
+    collection.add(documents=texts, embeddings=vectors, metadatas=metadatas, ids=ids)
+
+
+_build_collection_if_empty()
 
 
 def retrieve_chunks(query, n_results=5):
