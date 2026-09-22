@@ -3,16 +3,26 @@ import chromadb
 from pathlib import Path
 from dotenv import load_dotenv
 from groq import Groq
-from sentence_transformers import SentenceTransformer
+from huggingface_hub import InferenceClient
 
 REPO_ROOT = Path(os.getenv("REPO_ROOT", r"C:\learning\aithings"))
 load_dotenv(REPO_ROOT / ".env")
 
 DISTANCE_THRESHOLD = 0.75
 SKIP_FILES = {"day-11-rag-over-notes.md", "day-12-rag-improved.md"}
+EMBED_MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
 
 groq_client = Groq(api_key=os.getenv("GROQ_API_KEY"))
-embed_model = SentenceTransformer("all-MiniLM-L6-v2")
+# Hosted embedding API instead of loading torch/sentence-transformers locally —
+# avoids the ~300-500MB memory footprint that caused an OOM crash on Render's
+# free tier (512MB RAM). Same model, computed remotely instead of in-process.
+hf_client = InferenceClient(token=os.getenv("HF_TOKEN"))
+
+
+def embed(texts):
+    """texts: a string or list of strings. Returns a plain list (or list of lists) of floats."""
+    vectors = hf_client.feature_extraction(texts, model=EMBED_MODEL_NAME)
+    return vectors.tolist()
 
 client = chromadb.PersistentClient(path=os.getenv("CHROMA_DB_PATH", r"C:\learning\aithings\projects\day-14-chromadb\chroma_db"))
 collection = client.get_or_create_collection(name="ai_notes", metadata={"hnsw:space": "cosine"})
@@ -53,7 +63,7 @@ def _build_collection_if_empty():
     print(f"[startup] Rebuilding collection from {len(chunks)} chunks...")
     texts = [text for text, _ in chunks]
     sources = [source for _, source in chunks]
-    vectors = embed_model.encode(texts).tolist()
+    vectors = embed(texts)
     ids = [str(i) for i in range(len(texts))]
     metadatas = [{"source": source} for source in sources]
 
@@ -66,15 +76,16 @@ _build_collection_if_empty()
 
 def retrieve_chunks(query, n_results=5):
     """
-    Embeds the query using the local sentence-transformers model (no network
-    call, no Ollama dependency — runs anywhere the Python process runs),
-    then queries ChromaDB for the closest matching note chunks.
+    Embeds the query using Hugging Face's hosted Inference API (no local
+    torch/transformers dependency, no Ollama dependency — lightweight enough
+    to run on Render's free tier), then queries ChromaDB for the closest
+    matching note chunks.
 
     Returns (texts, metas, distances) — the retrieved chunk text, their
     source metadata, and cosine distance (lower = more similar) for each.
     Does NOT call the LLM here — that happens in answer_question().
     """
-    query_vector = embed_model.encode(query).tolist()
+    query_vector = embed(query)
     results = collection.query(
         query_embeddings=[query_vector],
         n_results=n_results,
