@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 from assistant import retrieve_chunks, model_plan_action, answer_question, check_git_status, read_progress_files
 
@@ -50,3 +51,69 @@ async def ask(question: Question):
     else:
         result = answer_question(question.text)
     return result
+
+
+# Simple frontend so this feels like a real product, not just a raw JSON API.
+# Kept on a separate path from "/" so Render's health check ("/") stays fast.
+CHAT_PAGE = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Repo Assistant</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 640px; margin: 40px auto; padding: 0 16px; }
+  h1 { font-size: 1.4rem; }
+  #question { width: 100%; padding: 10px; font-size: 1rem; box-sizing: border-box; }
+  #ask-btn { margin-top: 8px; padding: 8px 16px; font-size: 1rem; cursor: pointer; }
+  #answer { margin-top: 20px; white-space: pre-wrap; line-height: 1.5; }
+  .hint { color: #666; font-size: 0.9rem; }
+</style>
+</head>
+<body>
+  <h1>Ask Repo Assistant</h1>
+  <p class="hint">Ask about the learning notes (e.g. "what is temperature"), or try "check git status" / "what day am I on".</p>
+  <input id="question" type="text" placeholder="Ask a question..." />
+  <button id="ask-btn">Ask</button>
+  <div id="answer"></div>
+
+<script>
+  const input = document.getElementById("question");
+  const button = document.getElementById("ask-btn");
+  const answerBox = document.getElementById("answer");
+
+  async function askQuestion() {
+    const text = input.value.trim();
+    if (!text) return;
+
+    answerBox.textContent = "Thinking...";
+    button.disabled = true;
+
+    try {
+      const response = await fetch("/ask", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text }),
+      });
+      const data = await response.json();
+      answerBox.textContent = data.message || "No response.";
+    } catch (err) {
+      answerBox.textContent = "Error: " + err.message;
+    } finally {
+      button.disabled = false;
+    }
+  }
+
+  button.addEventListener("click", askQuestion);
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") askQuestion();
+  });
+</script>
+</body>
+</html>
+"""
+
+
+@app.get("/chat", response_class=HTMLResponse)
+async def chat_page():
+    return CHAT_PAGE
