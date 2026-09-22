@@ -7,8 +7,8 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 ## Current Focus
 
 **Phase:** Month 2 - AI Coding Workflow And A Product Feature
-**Current Day:** Day 27 (next)
-**Main Goal:** repo_assistant.py is feature-complete (RAG answers, git status, progress lookup, model-based routing with fallback). Now wrapping it in a FastAPI web API + simple frontend so it's a live, demoable AI feature instead of a CLI script — the portfolio-worthy version of Month 2's goal.
+**Current Day:** Day 28 (next)
+**Main Goal:** repo_assistant.py's logic is now wrapped in a working FastAPI web API (`/ask` endpoint, all 3 tools routed correctly). REPO_ROOT and ChromaDB paths are now environment-variable-configurable for deployment. Remaining blocker before actual deployment: the embedding call depends on local Ollama (`localhost:11434`), which won't exist on a deployed server.
 
 **Day 16 Outcome:** ✅ Eval target achieved at **80% (16/20)** after iterative retrieval debugging + eval expectation tuning.
 **Day 17 Outcome:** ✅ CLI tool complete with mode support, Groq integration, structured JSON output, and robust error handling.
@@ -21,6 +21,7 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 **Day 24 Outcome:** ✅ Built `repo_assistant.py` — combines RAG retrieval (from Day 14's ChromaDB collection) with tool routing (`check_git_status`), using a rule-based planner to route between answering questions and running commands. First real "ship a feature" milestone for Month 2.
 **Day 25 Outcome:** ✅ Replaced `repo_assistant.py`'s keyword-only planner with a model-based planner (Groq, temperature 0) that falls back to rule-based routing on invalid/failed responses — verified it correctly routes ambiguous phrasing (e.g. "tell me about my commits") without literal keyword matches.
 **Day 26 Outcome:** ✅ Added a third tool, `read_progress_files`, to `repo_assistant.py` — reads `progress.md` and answers questions about current day/progress directly instead of falling back to RAG hallucination. Planner, prompt, and fallback rules all updated to route to it correctly.
+**Day 27 Outcome:** ✅ Built a FastAPI wrapper (`projects/day-27/awesome-project/`) around `repo_assistant.py`'s logic — ported `retrieve_chunks`, `answer_question`, `check_git_status`, `read_progress_files`, and the model-based planner into `assistant.py`, wired to a `POST /ask` endpoint in `main.py`. Verified all 3 actions route and respond correctly via live HTTP requests (not just CLI). Made `REPO_ROOT` and the ChromaDB path environment-variable-configurable as a first step toward real deployment.
 **Day 24 Outcome:** ✅ Built `repo_assistant.py` — combines RAG retrieval (from Day 14's ChromaDB collection) with tool routing (`check_git_status`), using a rule-based planner to route between answering questions and running commands. First real "ship a feature" milestone for Month 2.
 
 ## Progress Summary

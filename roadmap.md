@@ -258,6 +258,8 @@ Success signal:
 - Day 25 status: upgraded the planner to a model-based one (Groq, with rule-based fallback) — routes ambiguous phrasing correctly, not just literal keywords.
 - Day 26 status: added `read_progress_files` as a third tool, so progress/day questions are answered from real data instead of RAG guessing.
 - Decision: `repo_assistant.py` is feature-complete as a CLI prototype. Next step is wrapping it in a FastAPI web API + simple frontend and deploying it, so it's a live, demoable feature rather than a local script only — this is the portfolio-facing version of "ship an actual AI feature in a real app."
+- Day 27 status: built `projects/day-27/awesome-project/` — a FastAPI app (`main.py` + `assistant.py`) wrapping all 3 `repo_assistant.py` actions behind a `POST /ask` endpoint, verified working via live HTTP requests. `REPO_ROOT` and the ChromaDB path are now env-var-configurable for deployment.
+- Remaining before real deployment: the embedding call depends on local Ollama (`localhost:11434`), which won't exist on a deployed server — this needs a cloud-reachable embedding solution (or switching embeddings to Groq/another hosted API) before deploying.
 
 ## Month 1: Foundation And First AI Tool
 

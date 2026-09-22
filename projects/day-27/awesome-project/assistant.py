@@ -13,10 +13,12 @@ DISTANCE_THRESHOLD = 0.75
 
 groq_client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
-client = chromadb.PersistentClient(path=r"C:\learning\aithings\projects\day-14-chromadb\chroma_db")
+client = chromadb.PersistentClient(path=os.getenv("CHROMA_DB_PATH", r"C:\learning\aithings\projects\day-14-chromadb\chroma_db"))
 collection = client.get_collection(name="ai_notes")
 ALLOWED_ACTIONS = {"read_progress_files", "summarize_status", "ask_clarification", "check_git_status", "answer_question"}
-REPO_ROOT = Path(r"C:\learning\aithings")
+REPO_ROOT = Path(os.getenv("REPO_ROOT", r"C:\learning\aithings"))
+client = chromadb.PersistentClient(path=os.getenv("CHROMA_DB_PATH", r"C:\learning\aithings\projects\day-14-chromadb\chroma_db"))
+
 
 def retrieve_chunks(query, n_results=5):
     """
