@@ -263,7 +263,8 @@ Success signal:
 - Day 28 status: solved the Ollama blocker — replaced the embedding HTTP call with `sentence-transformers` running `all-MiniLM-L6-v2` directly in-process (no server dependency). Verified retrieval quality unchanged despite documents being embedded via Ollama and queries now embedded via `sentence-transformers`.
 - Day 29 status: **deployed live** to Render at https://repo-assistant-api.onrender.com. Fixed three real deploy blockers: missing `requirements.txt` in git, ChromaDB collection not existing on a fresh server (self-healing rebuild from `days/*.md`), and an out-of-memory crash from `sentence-transformers`/`torch` on the 512MB free tier (fixed by switching to Hugging Face's hosted Inference API for embeddings). All 3 actions verified working via real public HTTP requests.
 - Option C / Month 2 success signal met: an actual AI feature is shipped in a live, deployed, demoable app — not just a local script.
-- Next task: decide what's next — extend this deployed feature further (more tools, a simple frontend), or move to a new Month 2/3 focus.
+- Day 30 status: added a real frontend at `/chat` (live: https://repo-assistant-api.onrender.com/chat) so the deployment is a clickable product, not just a JSON API. Also discovered and fixed a stale local RAG collection (missing Days 17-29) — local and deployed RAG now both cover all 27 note files / 697 chunks.
+- Next task: evals for the deployed `/ask` endpoint (systematically test answer quality, same idea as Day 16's RAG evals but against production), or pivot to a new Month 2/3 focus.
 
 ## Month 1: Foundation And First AI Tool
 
