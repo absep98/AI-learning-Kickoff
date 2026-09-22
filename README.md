@@ -52,10 +52,15 @@ I learn something every day, write it up in plain language, and commit it here. 
 | [Day 20](days/day-20-decision-metadata-tools.md) | Decision Metadata + Tools | check_git_status tool, planner_source and retry_attempts log metadata |
 | [Day 21](days/day-21-persist-step-logs.md) | Persist Step Logs | Step logs written to timestamped JSON files after each run |
 | [Day 22](days/day-22-planner-conversation-history.md) | Planner Conversation History | Prior steps replayed as chat history so the planner has memory across a run |
+| [Day 23](days/day-23-hardening-workflow-loop.md) | Hardening The Workflow Loop | Natural-language final response, retry-failure visibility, early stop on repeated clarification |
+| [Day 24](days/day-24-repo-assistant.md) | Repo Assistant: RAG + Tool Routing | Separated retrieval from generation, combined RAG with tool routing into one working assistant |
+| [Day 25](days/day-25-model-based-planner.md) | Model-Based Planner For Repo Assistant | Keyword router replaced with a model-based planner, validated fallback safety |
+| [Day 26](days/day-26-read-progress-files-tool.md) | Third Tool: read_progress_files | Fixed a real RAG hallucination bug by adding a dedicated tool instead of trusting retrieval |
+| [Day 27](days/day-27-fastapi-wrapper.md) | Wrapping Repo Assistant In A FastAPI Web API | FastAPI fundamentals, ported CLI logic to a POST /ask endpoint, env-var-configurable paths |
 
-*(This table grows as I progress.)*
+*(This table grows as I progress. Days 23-27 notes were drafted retroactively from actual commits/tests and reviewed before being added here.)*
 
-**Days 23+:** in progress — daily write-ups for these aren't written yet. See [`progress.md`](progress.md) for what's actually been built (workflow loop hardening, `repo_assistant.py` with RAG + tool routing, and a working FastAPI wrapper (`/ask` endpoint) around it — deployment is next, blocked on replacing a local-only Ollama dependency).
+**Days 28+:** in progress — see [`progress.md`](progress.md) for current status (remaining blocker: local Ollama dependency needs solving before real deployment).
 
 ## The Learning Approach
 
