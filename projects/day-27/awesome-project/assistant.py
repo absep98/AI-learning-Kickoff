@@ -41,12 +41,16 @@ def _build_collection_if_empty():
     deployed server.
     """
     if collection.count() > 0:
+        print(f"[startup] ChromaDB collection already has {collection.count()} chunks, skipping rebuild.")
         return
 
+    print(f"[startup] Collection empty. Looking for notes in: {REPO_ROOT / 'days'}")
     chunks = _load_note_chunks()
     if not chunks:
+        print("[startup] WARNING: no chunks found in days/*.md — REPO_ROOT is likely wrong.")
         return
 
+    print(f"[startup] Rebuilding collection from {len(chunks)} chunks...")
     texts = [text for text, _ in chunks]
     sources = [source for _, source in chunks]
     vectors = embed_model.encode(texts).tolist()
@@ -54,6 +58,7 @@ def _build_collection_if_empty():
     metadatas = [{"source": source} for source in sources]
 
     collection.add(documents=texts, embeddings=vectors, metadatas=metadatas, ids=ids)
+    print(f"[startup] Done. Collection now has {collection.count()} chunks.")
 
 
 _build_collection_if_empty()
