@@ -1,0 +1,62 @@
+[
+    {
+        "id": 1,
+        "question": "what is temperature",
+        "expected_type": "answer_question",
+        "expected_keyword": "logits"
+    },
+    {
+        "id": 2,
+        "question": "what is RAG",
+        "expected_type": "answer_question",
+        "expected_keyword": "retrieval"
+    },
+    {
+        "id": 3,
+        "question": "what are embeddings",
+        "expected_type": "answer_question",
+        "expected_keyword": "vector"
+    },
+    {
+        "id": 4,
+        "question": "what is ChromaDB used for",
+        "expected_type": "answer_question",
+        "expected_keyword": "vector database"
+    },
+    {
+        "id": 5,
+        "question": "what cloud api did we use for generation",
+        "expected_type": "answer_question",
+        "expected_keyword": "groq"
+    },
+    {
+        "id": 6,
+        "question": "what is FastAPI",
+        "expected_type": "answer_question",
+        "expected_keyword": "framework"
+    },
+    {
+        "id": 7,
+        "question": "why did the embedding step break when deployed",
+        "expected_type": "answer_question",
+        "expected_keyword": "ollama"
+    },
+    {
+        "id": 8,
+        "question": "check git status",
+        "expected_type": "check_git_status",
+        "expected_keyword": "changed file"
+    },
+    {
+        "id": 9,
+        "question": "what day am i on",
+        "expected_type": "read_progress_files",
+        "expected_keyword": "current day"
+    },
+    {
+        "id": 10,
+        "question": "tell me about my commits",
+        "expected_type": "check_git_status",
+        "expected_keyword": "changed file"
+    }
+]
