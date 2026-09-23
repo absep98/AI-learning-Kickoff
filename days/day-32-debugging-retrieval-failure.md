@@ -33,3 +33,10 @@ A RAG system's retrieval quality depends as much on **how documents were split i
 ## Next Step
 
 Redeploy to Render, re-run `run_eval.py` against the live URL, and confirm the overall pass rate — accepting that this one specific question may still not reach a perfect answer, and that's an honest, documented limitation rather than a bug to chase further right now.
+
+## Result After Deploying The Fix
+
+Re-ran the full eval suite against the live URL. **Q7 now passes** — and correctly explains both the Ollama local-only cause *and* references the chunking-split issue, because this very note (`day-32-debugging-retrieval-failure.md`) got retrieved as source material once it was live. The bug and its own documentation became part of the fix.
+
+Pass rate stayed at **9/10 (90%)**, but the specific failure shifted: **Q1 ("what is temperature") now fails** — not a real regression, the answer is still substantively correct (*"adjusts the softness of the model's probability distribution"*), it just no longer contains the literal word "logits" that the eval strictly requires, because `n_results=10` changed which chunks got summarized, which changed the generated phrasing. This is a **false negative from an overly strict single-keyword check**, not an actual answer-quality problem — a limitation of the eval design itself, worth revisiting (e.g. accept multiple valid keywords per question) rather than the RAG system.
+

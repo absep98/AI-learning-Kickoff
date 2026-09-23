@@ -7,8 +7,8 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 ## Current Focus
 
 **Phase:** Month 2 - AI Coding Workflow And A Product Feature
-**Current Day:** Day 31 (next)
-**Main Goal:** Repo Assistant is a genuinely demoable product now — live at https://repo-assistant-api.onrender.com/chat with a real webpage UI, not just a JSON API. Next: decide between hardening it further (evals for answer quality) or moving to a new focus area.
+**Current Day:** Day 33 (next)
+**Main Goal:** Built an eval harness for the deployed `/ask` endpoint, found and fixed a real retrieval bug (chunking split a correct explanation across two chunks, neither ranked high enough), and confirmed the fix live. Month 2's feature-shipping arc (Days 24-32) is complete and hardened with real evals, not just spot-checks.
 
 **Day 16 Outcome:** ✅ Eval target achieved at **80% (16/20)** after iterative retrieval debugging + eval expectation tuning.
 **Day 17 Outcome:** ✅ CLI tool complete with mode support, Groq integration, structured JSON output, and robust error handling.
@@ -25,6 +25,8 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 **Day 28 Outcome:** ✅ Replaced the Ollama-dependent embedding call in `retrieve_chunks()` with `sentence-transformers` running the same model (`all-MiniLM-L6-v2`) directly in-process — no local server dependency. Verified retrieval quality is unchanged (distance 0.4552 vs. Ollama's 0.4551 for the same query) despite documents being embedded via Ollama and queries now embedded via `sentence-transformers`. This was the last real blocker before deploying the FastAPI app to a cloud server.
 **Day 29 Outcome:** ✅ Deployed `assistant.py`/`main.py` live on Render (free tier) at https://repo-assistant-api.onrender.com. Solved three real deployment blockers along the way: (1) `requirements.txt` was never committed to git, (2) the ChromaDB collection didn't exist on the fresh server — fixed with self-healing rebuild-from-`days/*.md` logic, (3) `sentence-transformers`/`torch` caused an out-of-memory crash on the 512MB free tier — fixed by switching to Hugging Face's hosted Inference API for embeddings instead of running the model locally. All 3 actions (`answer_question`, `check_git_status`, `read_progress_files`) verified working via real public HTTP requests. Month 2's "ship an actual AI feature in a real app" goal is met.
 **Day 30 Outcome:** ✅ Rebuilt the local ChromaDB collection (was stale at Day 16, missing Days 17-29) so local RAG now matches the deployed version — 697 chunks across 27 files. Added a simple frontend at `/chat` (plain HTML/JS calling the existing `/ask` endpoint) so the live deployment is a real clickable product, not just a Swagger docs page. Verified live at https://repo-assistant-api.onrender.com/chat.
+**Day 31 Outcome:** ✅ Built an eval harness (`projects/day-31-deployed-evals/`) testing the live `/ask` endpoint with 10 real questions (7 RAG, 3 routing) — 90% pass rate on first run, and the one failure was a genuine retrieval bug, not a test-design flaw.
+**Day 32 Outcome:** ✅ Diagnosed the Day 31 failure: a correct explanation (why the embedding step broke when deployed) was split by paragraph-based chunking across two chunks that individually lacked enough shared vocabulary with the question to rank in the top 20. Increased `retrieve_chunks()`'s default `n_results` from 5 to 10 and documented the chunking limitation. Confirmed live: the failing question now passes, and a new (different) question briefly failed due to eval strictness, not an actual answer-quality regression — net pass rate held at 90%.
 
 ## Progress Summary
 

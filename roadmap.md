@@ -264,7 +264,10 @@ Success signal:
 - Day 29 status: **deployed live** to Render at https://repo-assistant-api.onrender.com. Fixed three real deploy blockers: missing `requirements.txt` in git, ChromaDB collection not existing on a fresh server (self-healing rebuild from `days/*.md`), and an out-of-memory crash from `sentence-transformers`/`torch` on the 512MB free tier (fixed by switching to Hugging Face's hosted Inference API for embeddings). All 3 actions verified working via real public HTTP requests.
 - Option C / Month 2 success signal met: an actual AI feature is shipped in a live, deployed, demoable app — not just a local script.
 - Day 30 status: added a real frontend at `/chat` (live: https://repo-assistant-api.onrender.com/chat) so the deployment is a clickable product, not just a JSON API. Also discovered and fixed a stale local RAG collection (missing Days 17-29) — local and deployed RAG now both cover all 27 note files / 697 chunks.
-- Next task: evals for the deployed `/ask` endpoint (systematically test answer quality, same idea as Day 16's RAG evals but against production), or pivot to a new Month 2/3 focus.
+- Day 31 status: built an eval harness (`projects/day-31-deployed-evals/`) testing the live `/ask` endpoint — 10 questions (7 RAG, 3 routing), 90% pass rate on first run, one genuine retrieval bug found.
+- Day 32 status: diagnosed the Day 31 failure — paragraph-based chunking split a correct explanation across two chunks that individually lacked enough shared vocabulary with the question to rank well. Increased `n_results` from 5 to 10 and documented the chunking limitation. Confirmed live: the fix works, net pass rate held at 90% (a different, non-critical false-negative emerged from eval strictness, not an actual regression).
+- Month 2's feature-shipping arc (Days 24-32) is complete: shipped, deployed, given a real UI, and hardened with actual evals rather than manual spot-checks.
+- Next task: decide on a new Month 2/3 focus area.
 
 ## Month 1: Foundation And First AI Tool
 

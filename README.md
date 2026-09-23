@@ -4,7 +4,7 @@ A software engineer's day-by-day journey from zero AI knowledge to building real
 
 No ML degree. No 3-month course first. Just learn one concept, build something, ship it, repeat.
 
-**🔴 Live demo:** [repo-assistant-api.onrender.com/chat](https://repo-assistant-api.onrender.com/chat) — a deployed AI assistant (RAG + tool routing) that answers questions about everything in this repo's daily notes, checks git status, and reports current progress. Built in [Days 24-30](days/day-24-repo-assistant.md).
+**🔴 Live demo:** [repo-assistant-api.onrender.com/chat](https://repo-assistant-api.onrender.com/chat) — a deployed AI assistant (RAG + tool routing) that answers questions about everything in this repo's daily notes, checks git status, and reports current progress. Built in [Days 24-32](days/day-24-repo-assistant.md), hardened with a real eval suite.
 
 ## Who Is This For
 
@@ -62,6 +62,8 @@ I learn something every day, write it up in plain language, and commit it here. 
 | [Day 28](days/day-28-removing-ollama-dependency.md) | Removing The Ollama Deployment Blocker | Replaced local-only Ollama embedding calls with sentence-transformers running in-process |
 | [Day 29](days/day-29-deploying-to-render.md) | Deploying Repo Assistant Live On Render | Live deployment at repo-assistant-api.onrender.com; fixed OOM crash by switching to a hosted embedding API |
 | [Day 30](days/day-30-frontend-and-rag-sync.md) | Simple Frontend + Syncing Local RAG Coverage | Added a real webpage UI at /chat; fixed stale local RAG collection missing 13 days of notes |
+| [Day 31](days/day-31-deployed-evals.md) | Evals For The Deployed Assistant | Built an eval harness testing the live /ask endpoint; 90% pass rate, found a real retrieval bug |
+| [Day 32](days/day-32-debugging-retrieval-failure.md) | Debugging A Real RAG Retrieval Failure | Diagnosed a chunking-split bug causing a correct explanation to rank too low to retrieve |
 
 *(This table grows as I progress. Days 23-27 notes were drafted retroactively from actual commits/tests and reviewed before being added here.)*
 
