@@ -74,7 +74,7 @@ def _build_collection_if_empty():
 _build_collection_if_empty()
 
 
-def retrieve_chunks(query, n_results=5):
+def retrieve_chunks(query, n_results=10):
     """
     Embeds the query using Hugging Face's hosted Inference API (no local
     torch/transformers dependency, no Ollama dependency — lightweight enough
