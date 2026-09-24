@@ -73,6 +73,7 @@ CHAT_PAGE = """
 <body>
   <h1>Ask Repo Assistant</h1>
   <p class="hint">Ask about the learning notes (e.g. "what is temperature"), or try "check git status" / "what day am I on".</p>
+  <p class="hint">Note: this runs on a free-tier server that sleeps after inactivity — the first question after a while may take up to a minute to respond.</p>
   <input id="question" type="text" placeholder="Ask a question..." />
   <button id="ask-btn">Ask</button>
   <div id="answer"></div>
@@ -86,7 +87,7 @@ CHAT_PAGE = """
     const text = input.value.trim();
     if (!text) return;
 
-    answerBox.textContent = "Thinking...";
+    answerBox.textContent = "Thinking... (may take up to a minute if the server was asleep)";
     button.disabled = true;
 
     try {
