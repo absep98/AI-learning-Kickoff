@@ -4,7 +4,7 @@ A software engineer's day-by-day journey from zero AI knowledge to building real
 
 No ML degree. No 3-month course first. Just learn one concept, build something, ship it, repeat.
 
-**🔴 Live demo:** [repo-assistant-api.onrender.com/chat](https://repo-assistant-api.onrender.com/chat) — a deployed AI assistant (RAG + tool routing) that answers questions about everything in this repo's daily notes, checks git status, and reports current progress. Built in [Days 24-32](days/day-24-repo-assistant.md), hardened with a real eval suite.
+**🔴 Live demo:** [repo-assistant-api.onrender.com/chat](https://repo-assistant-api.onrender.com/chat) — a deployed AI assistant (RAG + tool routing) that answers questions about everything in this repo's daily notes, checks git status, and reports current progress. Built in [Days 24-33](days/day-24-repo-assistant.md), hardened with a real eval suite and prompt injection testing.
 
 ## Who Is This For
 
@@ -64,10 +64,11 @@ I learn something every day, write it up in plain language, and commit it here. 
 | [Day 30](days/day-30-frontend-and-rag-sync.md) | Simple Frontend + Syncing Local RAG Coverage | Added a real webpage UI at /chat; fixed stale local RAG collection missing 13 days of notes |
 | [Day 31](days/day-31-deployed-evals.md) | Evals For The Deployed Assistant | Built an eval harness testing the live /ask endpoint; 90% pass rate, found a real retrieval bug |
 | [Day 32](days/day-32-debugging-retrieval-failure.md) | Debugging A Real RAG Retrieval Failure | Diagnosed a chunking-split bug causing a correct explanation to rank too low to retrieve |
+| [Day 33](days/day-33-prompt-injection-testing.md) | Prompt Injection Testing Against The Live Deployment | Found and fixed a real information-disclosure gap via a 2-attempt system prompt hardening |
 
 *(This table grows as I progress. Days 23-27 notes were drafted retroactively from actual commits/tests and reviewed before being added here.)*
 
-**Days 31+:** in progress — see [`progress.md`](progress.md) for current status.
+**Days 34+:** in progress — see [`progress.md`](progress.md) for current status.
 
 **Live demo:** [repo-assistant-api.onrender.com/chat](https://repo-assistant-api.onrender.com/chat) — a RAG + tool-routing assistant that answers questions about this repo's notes, checks git status, and reports current learning progress.
 

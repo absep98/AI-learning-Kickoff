@@ -267,6 +267,7 @@ Success signal:
 - Day 31 status: built an eval harness (`projects/day-31-deployed-evals/`) testing the live `/ask` endpoint — 10 questions (7 RAG, 3 routing), 90% pass rate on first run, one genuine retrieval bug found.
 - Day 32 status: diagnosed the Day 31 failure — paragraph-based chunking split a correct explanation across two chunks that individually lacked enough shared vocabulary with the question to rank well. Increased `n_results` from 5 to 10 and documented the chunking limitation. Confirmed live: the fix works, net pass rate held at 90% (a different, non-critical false-negative emerged from eval strictness, not an actual regression).
 - Month 2's feature-shipping arc (Days 24-32) is complete: shipped, deployed, given a real UI, and hardened with actual evals rather than manual spot-checks.
+- Day 33 status: tested the live deployment for prompt injection — 5/6 attempts correctly refused; 1 indirect extraction attempt got the model to paraphrase an unrelated retrieved snippet. Fixed via two-iteration system prompt hardening: forbidding verbatim quoting alone wasn't enough (model paraphrased the same disclosure instead), so added an explicit refusal rule for meta-questions about the assistant's own setup — confirmed live, normal functionality unaffected.
 - Next task: decide on a new Month 2/3 focus area.
 
 ## Month 1: Foundation And First AI Tool

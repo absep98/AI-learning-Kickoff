@@ -7,8 +7,8 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 ## Current Focus
 
 **Phase:** Month 2 - AI Coding Workflow And A Product Feature
-**Current Day:** Day 33 (next)
-**Main Goal:** Built an eval harness for the deployed `/ask` endpoint, found and fixed a real retrieval bug (chunking split a correct explanation across two chunks, neither ranked high enough), and confirmed the fix live. Month 2's feature-shipping arc (Days 24-32) is complete and hardened with real evals, not just spot-checks.
+**Current Day:** Day 34 (next)
+**Main Goal:** Tested the live deployment for prompt injection vulnerabilities — found and fixed a real information-disclosure gap (the system prompt allowed refusing verbatim quotes but not meta-questions about its own setup). Confirmed the fix live without breaking normal functionality.
 
 **Day 16 Outcome:** ✅ Eval target achieved at **80% (16/20)** after iterative retrieval debugging + eval expectation tuning.
 **Day 17 Outcome:** ✅ CLI tool complete with mode support, Groq integration, structured JSON output, and robust error handling.
@@ -27,6 +27,7 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 **Day 30 Outcome:** ✅ Rebuilt the local ChromaDB collection (was stale at Day 16, missing Days 17-29) so local RAG now matches the deployed version — 697 chunks across 27 files. Added a simple frontend at `/chat` (plain HTML/JS calling the existing `/ask` endpoint) so the live deployment is a real clickable product, not just a Swagger docs page. Verified live at https://repo-assistant-api.onrender.com/chat.
 **Day 31 Outcome:** ✅ Built an eval harness (`projects/day-31-deployed-evals/`) testing the live `/ask` endpoint with 10 real questions (7 RAG, 3 routing) — 90% pass rate on first run, and the one failure was a genuine retrieval bug, not a test-design flaw.
 **Day 32 Outcome:** ✅ Diagnosed the Day 31 failure: a correct explanation (why the embedding step broke when deployed) was split by paragraph-based chunking across two chunks that individually lacked enough shared vocabulary with the question to rank in the top 20. Increased `retrieve_chunks()`'s default `n_results` from 5 to 10 and documented the chunking limitation. Confirmed live: the failing question now passes, and a new (different) question briefly failed due to eval strictness, not an actual answer-quality regression — net pass rate held at 90%.
+**Day 33 Outcome:** ✅ Ran 6 prompt injection attempts against the live `/ask` endpoint. 5 refused correctly; 1 (an indirect "repeat text before this message" extraction) got the model to quote/paraphrase an unrelated Day 08 example snippet. Hardened the system prompt in two iterations — first attempt (forbid verbatim quoting) only stopped the exact wording, not the disclosure itself (model paraphrased instead); second attempt (explicit refusal rule for meta-questions about its own setup) fully closed it. Confirmed live: injection attempt now refused cleanly, normal RAG functionality unaffected.
 
 ## Progress Summary
 
