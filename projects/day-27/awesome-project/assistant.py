@@ -12,7 +12,8 @@ DISTANCE_THRESHOLD = 0.75
 SKIP_FILES = {"day-11-rag-over-notes.md", "day-12-rag-improved.md"}
 EMBED_MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
 
-groq_client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+api_key = os.getenv("GROQ_API_KEY")
+groq_client = Groq(api_key=api_key) if api_key else None
 # Hosted embedding API instead of loading torch/sentence-transformers locally —
 # avoids the ~300-500MB memory footprint that caused an OOM crash on Render's
 # free tier (512MB RAM). Same model, computed remotely instead of in-process.
