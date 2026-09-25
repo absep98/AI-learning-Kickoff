@@ -7,8 +7,8 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 ## Current Focus
 
 **Phase:** Month 2 - AI Coding Workflow And A Product Feature
-**Current Day:** Day 35 (next)
-**Main Goal:** Measured real latency on the deployed assistant and found the actual bottleneck was a 43-second Render free-tier cold start — not RAG-vs-tool routing speed as assumed. Fixed for free with an external keep-alive ping plus a UX warning, and confirmed the fix with before/after measurements.
+**Current Day:** Day 36 (next)
+**Main Goal:** Found and fixed a real model-fallback bug in `assistant.py` — the `if not groq_client:` safety check was dead code (Groq's client is always truthy regardless of key validity), while the real safety net (try/except around the actual API call) already worked correctly. Fixed the client setup to match `mock_loop.py`'s proven pattern so both failure modes (missing key, invalid key) are now genuinely handled.
 
 **Day 16 Outcome:** ✅ Eval target achieved at **80% (16/20)** after iterative retrieval debugging + eval expectation tuning.
 **Day 17 Outcome:** ✅ CLI tool complete with mode support, Groq integration, structured JSON output, and robust error handling.
@@ -29,6 +29,7 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 **Day 32 Outcome:** ✅ Diagnosed the Day 31 failure: a correct explanation (why the embedding step broke when deployed) was split by paragraph-based chunking across two chunks that individually lacked enough shared vocabulary with the question to rank in the top 20. Increased `retrieve_chunks()`'s default `n_results` from 5 to 10 and documented the chunking limitation. Confirmed live: the failing question now passes, and a new (different) question briefly failed due to eval strictness, not an actual answer-quality regression — net pass rate held at 90%.
 **Day 33 Outcome:** ✅ Ran 6 prompt injection attempts against the live `/ask` endpoint. 5 refused correctly; 1 (an indirect "repeat text before this message" extraction) got the model to quote/paraphrase an unrelated Day 08 example snippet. Hardened the system prompt in two iterations — first attempt (forbid verbatim quoting) only stopped the exact wording, not the disclosure itself (model paraphrased instead); second attempt (explicit refusal rule for meta-questions about its own setup) fully closed it. Confirmed live: injection attempt now refused cleanly, normal RAG functionality unaffected.
 **Day 34 Outcome:** ✅ Measured real latency against the live `/ask` endpoint (5 calls each for a RAG question and a tool-routing question). Found the actual bottleneck: a 43-second Render free-tier cold start on the first request after inactivity — far bigger than the ~1s difference between RAG (~1.47s avg) and tool routing (~0.44s avg). Fixed for free with an external cron-job.org keep-alive ping every 10 minutes, plus a UX warning on `/chat` in the meantime. Confirmed fixed: re-measured after the ping ran for ~30 minutes, no more cold-start outlier.
+**Day 35 Outcome:** ✅ Proved `assistant.py`'s `if not groq_client:` fallback check was dead code — `Groq(api_key=...)` is always truthy, even with a fake key, so it could never detect a bad key. Confirmed the real safety net (a `try/except` around the actual API call) already worked correctly by testing with a genuinely broken key. Fixed the client setup to match `mock_loop.py`'s proven pattern (`Groq(api_key=api_key) if api_key else None`), so a missing key and an invalid key are now both genuinely handled by two distinct, real checks instead of one working and one fake.
 
 ## Progress Summary
 

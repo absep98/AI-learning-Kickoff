@@ -269,6 +269,7 @@ Success signal:
 - Month 2's feature-shipping arc (Days 24-32) is complete: shipped, deployed, given a real UI, and hardened with actual evals rather than manual spot-checks.
 - Day 33 status: tested the live deployment for prompt injection — 5/6 attempts correctly refused; 1 indirect extraction attempt got the model to paraphrase an unrelated retrieved snippet. Fixed via two-iteration system prompt hardening: forbidding verbatim quoting alone wasn't enough (model paraphrased the same disclosure instead), so added an explicit refusal rule for meta-questions about the assistant's own setup — confirmed live, normal functionality unaffected.
 - Day 34 status: measured real latency on the live `/ask` endpoint before assuming what to optimize — found the actual bottleneck was a 43-second Render free-tier cold start, not RAG-vs-tool speed. Fixed for free with an external keep-alive ping (cron-job.org, every 10 minutes) plus a UX warning; confirmed with before/after measurements.
+- Day 35 status: found and fixed a real model-fallback bug — `if not groq_client:` in `assistant.py` was dead code (Groq's client object is always truthy regardless of API key validity), while the actual safety net (`try/except` around the real API call) already worked. Matched `mock_loop.py`'s proven client-setup pattern so a missing key is now genuinely detected too, not just an invalid one.
 - Next task: decide on a new Month 2/3 focus area.
 
 ## Month 1: Foundation And First AI Tool
