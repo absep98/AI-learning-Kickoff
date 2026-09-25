@@ -233,7 +233,12 @@ def model_plan_action(intent, context="", history=None):
 
         action = response.choices[0].message.content.strip().lower()
         action = action.replace("`", "").replace('"', "").replace("'", "")
-        action = action.splitlines()[0].strip()
+        # gpt-oss-20b sometimes spends its whole completion budget on hidden
+        # reasoning tokens and returns empty visible content — guard against
+        # that instead of letting splitlines()[0] raise IndexError, which was
+        # silently swallowed by the except below and lost the usage data too.
+        lines = action.splitlines()
+        action = lines[0].strip() if lines else ""
         usage = _usage_info(ROUTING_MODEL, response)
 
         if action in ALLOWED_ACTIONS:
