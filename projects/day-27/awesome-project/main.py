@@ -43,13 +43,20 @@ async def greet_query(name: str):
 async def ask(question: Question):
     # question is a Question object here, not a raw dict — FastAPI already
     # validated + parsed the JSON body against the BaseModel above.
-    action = model_plan_action(question.text)
+    action, routing_usage = model_plan_action(question.text)
     if action == "check_git_status":
         result = check_git_status()
     elif action == "read_progress_files":
         result = read_progress_files()
     else:
         result = answer_question(question.text)
+
+    # Every request routes through model_plan_action (llama-3.1-8b-instant);
+    # answer_question additionally calls gpt-oss-20b — surface both so cost
+    # per request is visible from the client, same pattern as latency in Day 34.
+    answer_usage = result.pop("usage", None)
+    result["usage"] = [u for u in (routing_usage, answer_usage) if u]
+    result["total_cost_usd"] = round(sum(u["cost_usd"] for u in result["usage"]), 8)
     return result
 
 

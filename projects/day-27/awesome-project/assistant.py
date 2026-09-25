@@ -14,6 +14,33 @@ EMBED_MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
 
 api_key = os.getenv("GROQ_API_KEY")
 groq_client = Groq(api_key=api_key) if api_key else None
+
+# USD per 1M tokens. Approximate — taken from Groq's published rates at the
+# time this was written; console.groq.com/settings/billing has the current
+# numbers if these ever need re-checking.
+PRICING = {
+    "openai/gpt-oss-20b": {"input": 0.10, "output": 0.50},
+}
+
+ROUTING_MODEL = "openai/gpt-oss-20b"  # llama-3.1-8b-instant was decommissioned by Groq (see Day 36)
+
+
+def _usage_info(model, response):
+    """Pulls token counts off a Groq chat completion response and estimates USD cost."""
+    usage = getattr(response, "usage", None)
+    if usage is None:
+        return None
+    prompt_tokens = usage.prompt_tokens
+    completion_tokens = usage.completion_tokens
+    rates = PRICING.get(model, {"input": 0.0, "output": 0.0})
+    cost_usd = (prompt_tokens / 1_000_000) * rates["input"] + (completion_tokens / 1_000_000) * rates["output"]
+    return {
+        "model": model,
+        "prompt_tokens": prompt_tokens,
+        "completion_tokens": completion_tokens,
+        "total_tokens": usage.total_tokens,
+        "cost_usd": round(cost_usd, 8),
+    }
 # Hosted embedding API instead of loading torch/sentence-transformers locally —
 # avoids the ~300-500MB memory footprint that caused an OOM crash on Render's
 # free tier (512MB RAM). Same model, computed remotely instead of in-process.
@@ -142,7 +169,8 @@ def answer_question(query):
         ],
     )
     answer = response.choices[0].message.content.strip()
-    return {"ok": "true", "message": f"{answer} (sources: {', '.join(sources)})"}
+    usage = _usage_info("openai/gpt-oss-20b", response)
+    return {"ok": "true", "message": f"{answer} (sources: {', '.join(sources)})", "usage": usage}
 
 def check_git_status():
     import subprocess
@@ -173,7 +201,7 @@ def read_progress_files():
 
 def model_plan_action(intent, context="", history=None):
     if not groq_client:
-        return plan_action(intent)
+        return plan_action(intent), None
 
     try:
         messages = [
@@ -198,7 +226,7 @@ def model_plan_action(intent, context="", history=None):
         messages.append({"role": "user", "content": f"Intent: {intent}\nContext: {context}\n"})
 
         response = groq_client.chat.completions.create(
-            model="llama-3.1-8b-instant",
+            model=ROUTING_MODEL,
             temperature=0,
             messages=messages
         )
@@ -206,13 +234,14 @@ def model_plan_action(intent, context="", history=None):
         action = response.choices[0].message.content.strip().lower()
         action = action.replace("`", "").replace('"', "").replace("'", "")
         action = action.splitlines()[0].strip()
+        usage = _usage_info(ROUTING_MODEL, response)
 
         if action in ALLOWED_ACTIONS:
-            return action
+            return action, usage
 
-        return plan_action(intent)
+        return plan_action(intent), usage
     except Exception:
-        return plan_action(intent)
+        return plan_action(intent), None
 
 
 if __name__ == "__main__":
