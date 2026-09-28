@@ -67,10 +67,11 @@ I learn something every day, write it up in plain language, and commit it here. 
 | [Day 33](days/day-33-prompt-injection-testing.md) | Prompt Injection Testing Against The Live Deployment | Found and fixed a real information-disclosure gap via a 2-attempt system prompt hardening |
 | [Day 34](days/day-34-latency-and-cold-start.md) | Measuring And Fixing Latency On The Deployed Assistant | Found a 43s cold-start bottleneck (not RAG speed as assumed), fixed for free with a keep-alive ping |
 | [Day 35](days/day-35-fixing-fallback-bug.md) | Fixing A Real Model Fallback Bug | Proved a defensive `if not groq_client` check was dead code, fixed to match a working pattern |
+| [Day 36](days/day-36-cost-monitoring.md) | Cost Monitoring (And An Accidental Bug Find) | Added token/cost tracking to `/ask`; discovered the routing model had been silently deprecated by Groq the whole time |
 
 *(This table grows as I progress. Days 23-27 notes were drafted retroactively from actual commits/tests and reviewed before being added here.)*
 
-**Days 36+:** in progress — see [`progress.md`](progress.md) for current status.
+**Days 37+:** in progress — see [`progress.md`](progress.md) for current status.
 
 **Live demo:** [repo-assistant-api.onrender.com/chat](https://repo-assistant-api.onrender.com/chat) — a RAG + tool-routing assistant that answers questions about this repo's notes, checks git status, and reports current learning progress.
 
