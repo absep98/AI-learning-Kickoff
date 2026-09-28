@@ -4,16 +4,20 @@ from pathlib import Path
 from dotenv import load_dotenv
 from groq import Groq
 from huggingface_hub import InferenceClient
+import time
 
 REPO_ROOT = Path(os.getenv("REPO_ROOT", r"C:\learning\aithings"))
 load_dotenv(REPO_ROOT / ".env")
 
 DISTANCE_THRESHOLD = 0.75
+CACHE_TTL_SECONDS = 10 * 60  # 10 minutes — long enough to catch repeat demo questions, short enough to stay fresh
 SKIP_FILES = {"day-11-rag-over-notes.md", "day-12-rag-improved.md"}
 EMBED_MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
 
 api_key = os.getenv("GROQ_API_KEY")
 groq_client = Groq(api_key=api_key) if api_key else None
+
+_answer_cache = {}
 
 # USD per 1M tokens. Approximate — taken from Groq's published rates at the
 # time this was written; console.groq.com/settings/billing has the current
@@ -127,7 +131,7 @@ def retrieve_chunks(query, n_results=10):
     return (texts, metas, distances)
 
 def plan_action(query):
-    query = query.lower()
+    query = query.strip().lower()
 
     if "git" in query or "status" in query or "commit" in query or "branch" in query:
         return "check_git_status"
@@ -138,6 +142,13 @@ def plan_action(query):
     return "answer_question"
 
 def answer_question(query):
+    query = query.strip().lower()
+    
+    if query in _answer_cache:
+        cached_result, cached_time = _answer_cache[query]
+        if time.time() - cached_time < CACHE_TTL_SECONDS:
+            return cached_result
+    
     texts, metas, distances = retrieve_chunks(query)
 
     if not texts or distances[0] > DISTANCE_THRESHOLD:
@@ -170,7 +181,9 @@ def answer_question(query):
     )
     answer = response.choices[0].message.content.strip()
     usage = _usage_info("openai/gpt-oss-20b", response)
-    return {"ok": "true", "message": f"{answer} (sources: {', '.join(sources)})", "usage": usage}
+    result = {"ok": "true", "message": f"{answer} (sources: {', '.join(sources)})", "usage": usage}
+    _answer_cache[query] = (result, time.time())
+    return result
 
 def check_git_status():
     import subprocess
