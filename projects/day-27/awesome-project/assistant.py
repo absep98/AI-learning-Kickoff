@@ -147,7 +147,10 @@ def answer_question(query):
     if query in _answer_cache:
         cached_result, cached_time = _answer_cache[query]
         if time.time() - cached_time < CACHE_TTL_SECONDS:
-            return cached_result
+            # Return a copy — main.py mutates top-level keys of what it gets
+            # back (.pop("usage"), reassigns it); returning the cached dict
+            # directly let that mutation corrupt the cache entry itself.
+            return dict(cached_result)
     
     texts, metas, distances = retrieve_chunks(query)
 
@@ -182,7 +185,9 @@ def answer_question(query):
     answer = response.choices[0].message.content.strip()
     usage = _usage_info("openai/gpt-oss-20b", response)
     result = {"ok": "true", "message": f"{answer} (sources: {', '.join(sources)})", "usage": usage}
-    _answer_cache[query] = (result, time.time())
+    # Store a separate copy — the caller may mutate the dict it gets back
+    # (main.py does), which must never reach the object sitting in the cache.
+    _answer_cache[query] = (dict(result), time.time())
     return result
 
 def check_git_status():
