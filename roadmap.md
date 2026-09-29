@@ -271,7 +271,8 @@ Success signal:
 - Day 34 status: measured real latency on the live `/ask` endpoint before assuming what to optimize — found the actual bottleneck was a 43-second Render free-tier cold start, not RAG-vs-tool speed. Fixed for free with an external keep-alive ping (cron-job.org, every 10 minutes) plus a UX warning; confirmed with before/after measurements.
 - Day 35 status: found and fixed a real model-fallback bug — `if not groq_client:` in `assistant.py` was dead code (Groq's client object is always truthy regardless of API key validity), while the actual safety net (`try/except` around the real API call) already worked. Matched `mock_loop.py`'s proven client-setup pattern so a missing key is now genuinely detected too, not just an invalid one.
 - Day 36 status: added token/cost tracking to `/ask` (Section 6's "Cost monitoring" item) — and while testing it, discovered Groq had decommissioned the routing model (`llama-3.1-8b-instant`), silently masked by the very fallback verified on Day 35. Fixed by switching routing to `openai/gpt-oss-20b`; confirmed both rule-matchable and ambiguous-phrasing routing still work, live.
-- Next task: decide on a new Month 2/3 focus area (remaining Section 6 items: caching, privacy/PII handling, user feedback loops, human review loops).
+- Day 37 status: added a TTL-based cache (Section 6's "Caching" item), motivated directly by Day 36's cost data. Found and fixed a real cache-poisoning bug — a caller mutating a dict handed out by reference corrupted the cache itself, crashing every hit after the first. Fixed by copying at the cache boundary; confirmed live.
+- Next task: decide on a new Month 2/3 focus area (remaining Section 6 items: privacy/PII handling, user feedback loops, human review loops).
 
 ## Month 1: Foundation And First AI Tool
 
