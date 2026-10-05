@@ -1,6 +1,7 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, Request
+import time
 from fastapi.responses import HTMLResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from assistant import retrieve_chunks, model_plan_action, answer_question, check_git_status, read_progress_files
 
 
@@ -10,8 +11,11 @@ from assistant import retrieve_chunks, model_plan_action, answer_question, check
 # (so question.text works like any object attribute, e.g. log.action).
 # Invalid input (missing/wrong-type field) -> FastAPI returns 422 automatically,
 # your function code never even executes.
+
+_request_log = {}
+
 class Question(BaseModel):
-    text: str
+    text: str = Field(..., max_length=422)
 
 app = FastAPI()
 
@@ -40,9 +44,18 @@ async def greet_query(name: str):
     return {"message": f"Hello {name}! (via query)"}
 
 @app.post("/ask")
-async def ask(question: Question):
+async def ask(question: Question, request: Request):
     # question is a Question object here, not a raw dict — FastAPI already
     # validated + parsed the JSON body against the BaseModel above.
+    ip = request.client.host
+    timestamps = _request_log.get(ip,[])
+    recent  = [ts for ts in timestamps if time.time()- ts < 60]
+    
+    if len(recent) >= 5:
+        raise HTTPException(status_code=429, detail="reahed or hit daily limit ")
+    
+    recent.append(time.time())
+    _request_log[ip] = recent
     action, routing_usage = model_plan_action(question.text)
     if action == "check_git_status":
         result = check_git_status()
