@@ -103,7 +103,15 @@ def _build_collection_if_empty():
     print(f"[startup] Done. Collection now has {collection.count()} chunks.")
 
 
-_build_collection_if_empty()
+try:
+    _build_collection_if_empty()
+except Exception as err:
+    # Every fresh deploy (ephemeral filesystem, chroma_db/ is gitignored) rebuilds
+    # from scratch via the HF embedding API. If that API is unavailable (e.g. out
+    # of credits, rate limited, network error), the whole app must still boot —
+    # answer_question() will just find an empty collection and degrade gracefully
+    # instead of taking down check_git_status/read_progress_files too.
+    print(f"[startup] WARNING: collection rebuild failed, continuing with an empty collection: {err}")
 
 
 def retrieve_chunks(query, n_results=10):
