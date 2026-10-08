@@ -47,7 +47,14 @@ async def greet_query(name: str):
 async def ask(question: Question, request: Request):
     # question is a Question object here, not a raw dict — FastAPI already
     # validated + parsed the JSON body against the BaseModel above.
-    ip = request.client.host
+
+    forwarded = request.headers.get("x-forwarded-for")
+    if forwarded:
+      ips = forwarded.split(",")
+      ip = ips[0]
+    else:
+      ip = request.client.host
+
     timestamps = _request_log.get(ip,[])
     recent  = [ts for ts in timestamps if time.time()- ts < 60]
     
