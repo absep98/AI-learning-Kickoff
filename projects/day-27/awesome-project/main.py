@@ -1,5 +1,7 @@
 from fastapi import FastAPI, HTTPException, Request
 import time
+import uuid
+import json
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel, Field
 from assistant import retrieve_chunks, model_plan_action, answer_question, check_git_status, read_progress_files
@@ -16,6 +18,11 @@ _request_log = {}
 
 class Question(BaseModel):
     text: str = Field(..., max_length=422)
+
+
+class Feedback(BaseModel):
+    answer_id: str
+    vote: str
 
 app = FastAPI()
 
@@ -77,8 +84,17 @@ async def ask(question: Question, request: Request):
     answer_usage = result.pop("usage", None)
     result["usage"] = [u for u in (routing_usage, answer_usage) if u]
     result["total_cost_usd"] = round(sum(u["cost_usd"] for u in result["usage"]), 8)
+    result["answer_id"] = str(uuid.uuid4())
     return result
 
+
+@app.post("/feedback")
+async def feedback(fb: Feedback):
+    fd = {"answer_id": fb.answer_id, "vote": fb.vote, "timestamp": time.time()}
+    line = json.dumps(fd)
+    with open("feedback_log.jsonl", "a") as f:
+        f.write(line + "\n")
+    return {"ok": "true"}
 
 # Simple frontend so this feels like a real product, not just a raw JSON API.
 # Kept on a separate path from "/" so Render's health check ("/") stays fast.
@@ -104,12 +120,14 @@ CHAT_PAGE = """
   <input id="question" type="text" placeholder="Ask a question..." />
   <button id="ask-btn">Ask</button>
   <div id="answer"></div>
+  <button id="thumbs-up">👍</button>
+  <button id="thumbs-down">👎</button>
 
 <script>
   const input = document.getElementById("question");
   const button = document.getElementById("ask-btn");
   const answerBox = document.getElementById("answer");
-
+  let currentAnswerId = null;
   async function askQuestion() {
     const text = input.value.trim();
     if (!text) return;
@@ -125,6 +143,7 @@ CHAT_PAGE = """
       });
       const data = await response.json();
       answerBox.textContent = data.message || "No response.";
+      currentAnswerId = data.answer_id;
     } catch (err) {
       answerBox.textContent = "Error: " + err.message;
     } finally {
@@ -136,6 +155,22 @@ CHAT_PAGE = """
   input.addEventListener("keydown", (e) => {
     if (e.key === "Enter") askQuestion();
   });
+  
+  document.getElementById("thumbs-up").addEventListener("click", () => sendFeedback("up"));
+  document.getElementById("thumbs-down").addEventListener("click", () => sendFeedback("down"));
+
+  async function sendFeedback(vote) {
+    if(!currentAnswerId) {
+      return;
+    }
+
+    await fetch("/feedback", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({answer_id : currentAnswerId, vote: vote}),
+    });
+  }
+
 </script>
 </body>
 </html>
