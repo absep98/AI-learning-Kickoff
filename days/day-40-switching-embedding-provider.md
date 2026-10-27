@@ -1,6 +1,6 @@
 # Day 40 - Switching the Embedding Provider (HF -> Gemini)
 
-**Status: works locally, not deployed.** RAG runs end-to-end on my machine with Gemini embeddings and a re-tuned threshold. Render deploy, query-embedding retry and cleanup are still pending, so live RAG is still down.
+**Status: deployed.** RAG runs end-to-end locally and on the live Render site with Gemini embeddings and a re-tuned threshold (merged to `main` as `8b08071`). Live check: "what is temperature" answers with sources; "who won the 2018 World Cup?" returns "No relevant notes found".
 
 ## Why
 
@@ -57,9 +57,10 @@ Set `DISTANCE_THRESHOLD = 0.35` (inside the gap, leaning toward in-scope). Resul
 
 ## Where we left off (next session)
 
-1. `retrieve_chunks` still calls `embed(query, ...)` directly; switch to `_embed_with_retry`.
-2. Cleanup: remove `hf_client`/HF import, stale docstring mentioning Hugging Face, commented-out lines, fix the warning text, point it at `ingest.py`.
-3. Add `google-genai` to the dependencies; set `GOOGLE_API_KEY` on Render; commit `embeddings.json`; deploy; check live.
-4. Re-run the Day 31 eval for a before/after number (also tests the 0.35 threshold on borderline questions).
-5. Only pass chunks that are individually under the threshold, not all 10 once the top one passes.
-6. Ingest must be re-run when notes change (staleness).
+Done after the first commit: query embedding now uses `_embed_with_retry`; HF import/client/docstring removed; warning text fixed; `google-genai` added to `pyproject.toml`/`uv.lock`/`requirements.txt`; `GOOGLE_API_KEY` set on Render; merged and pushed; live check passed.
+
+Still open:
+1. Re-run the Day 31 eval against the live app for a before/after number and to test the 0.35 threshold on borderline questions.
+2. Only pass chunks that are individually under the threshold, not all 10 once the top one passes.
+3. `ingest.py` must be re-run (and `embeddings.json` re-committed) when notes change; add a staleness check.
+4. Retry covers short blips only (waits of 1/2/4 s); a free-tier 429 can ask for 19-48 s.
