@@ -3,7 +3,6 @@ import chromadb
 from pathlib import Path
 from dotenv import load_dotenv
 from groq import Groq
-from huggingface_hub import InferenceClient
 import time
 from google import genai
 from google.genai import types
@@ -55,11 +54,9 @@ def _usage_info(model, response):
         "total_tokens": usage.total_tokens,
         "cost_usd": round(cost_usd, 8),
     }
-# Hosted embedding API instead of loading torch/sentence-transformers locally —
-# avoids the ~300-500MB memory footprint that caused an OOM crash on Render's
-# free tier (512MB RAM). Same model, computed remotely instead of in-process.
-hf_client = InferenceClient(token=os.getenv("HF_TOKEN"))
-
+# Embeddings come from Gemini's hosted API (gemini-embedding-001, 768 dims) instead of
+# a local torch/sentence-transformers model — keeps memory low on Render's free tier
+# (512MB RAM). Chunks and queries must both use this model, or distances are meaningless.
 
 def embed(texts, task_type):
     """texts: a string or list of strings. Returns a plain list (or list of lists) of floats."""
@@ -110,7 +107,7 @@ def _embed_with_retry(texts, task_type):
 
 def _load_vector_file():
     if not VECTOR_PATH.exists():
-        print('Embeddingds doesnt exist, Need to generate embeddings over')
+        print(f"[startup] WARNING: {VECTOR_PATH.name} not found. Run ingest.py to generate it. RAG will return no results until then.")
         return None
     with open(VECTOR_PATH, encoding="utf-8") as f:
         return json.load(f)
@@ -165,7 +162,7 @@ except Exception as err:
 
 def retrieve_chunks(query, n_results=10):
     """
-    Embeds the query using Hugging Face's hosted Inference API (no local
+    Embeds the query using gemini hosted Inference API (no local
     torch/transformers dependency, no Ollama dependency — lightweight enough
     to run on Render's free tier), then queries ChromaDB for the closest
     matching note chunks.
@@ -174,7 +171,7 @@ def retrieve_chunks(query, n_results=10):
     source metadata, and cosine distance (lower = more similar) for each.
     Does NOT call the LLM here — that happens in answer_question().
     """
-    query_vector = embed(query, "RETRIEVAL_QUERY")
+    query_vector = _embed_with_retry(query, "RETRIEVAL_QUERY")
     results = collection.query(
         query_embeddings=[query_vector],
         n_results=n_results,
