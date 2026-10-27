@@ -5,17 +5,27 @@ from dotenv import load_dotenv
 from groq import Groq
 from huggingface_hub import InferenceClient
 import time
-
+from google import genai
+from google.genai import types
+from google.genai import errors
+import json
 REPO_ROOT = Path(os.getenv("REPO_ROOT", r"C:\learning\aithings"))
 load_dotenv(REPO_ROOT / ".env")
-
-DISTANCE_THRESHOLD = 0.75
+VECTOR_PATH = Path(__file__).parent / "embeddings.json"
+DISTANCE_THRESHOLD = 0.35
 CACHE_TTL_SECONDS = 10 * 60  # 10 minutes — long enough to catch repeat demo questions, short enough to stay fresh
 SKIP_FILES = {"day-11-rag-over-notes.md", "day-12-rag-improved.md"}
-EMBED_MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
+EMBED_MODEL_NAME = "gemini-embedding-001"
+EMBED_DIMENSIONS = 768
+COLLECTION_NAME = "ai_notes_gemini_768"
+BATCH_SIZE = 50
+MAX_RETRIES = 3
 
 api_key = os.getenv("GROQ_API_KEY")
 groq_client = Groq(api_key=api_key) if api_key else None
+
+google_api_key = os.getenv("GOOGLE_API_KEY")
+genai_client = genai.Client(api_key=google_api_key) if google_api_key else None
 
 _answer_cache = {}
 
@@ -51,13 +61,24 @@ def _usage_info(model, response):
 hf_client = InferenceClient(token=os.getenv("HF_TOKEN"))
 
 
-def embed(texts):
+def embed(texts, task_type):
     """texts: a string or list of strings. Returns a plain list (or list of lists) of floats."""
-    vectors = hf_client.feature_extraction(texts, model=EMBED_MODEL_NAME)
-    return vectors.tolist()
+
+        
+    results = genai_client.models.embed_content(
+        model = EMBED_MODEL_NAME,
+        contents = texts,
+        config = types.EmbedContentConfig(task_type=task_type, output_dimensionality = EMBED_DIMENSIONS)
+    )
+
+    if isinstance(texts, str):
+        return results.embeddings[0].values
+
+    lists = [e.values for e in results.embeddings]
+    return lists
 
 client = chromadb.PersistentClient(path=os.getenv("CHROMA_DB_PATH", r"C:\learning\aithings\projects\day-14-chromadb\chroma_db"))
-collection = client.get_or_create_collection(name="ai_notes", metadata={"hnsw:space": "cosine"})
+collection = client.get_or_create_collection(name=COLLECTION_NAME, metadata={"hnsw:space": "cosine"})
 ALLOWED_ACTIONS = {"read_progress_files", "summarize_status", "ask_clarification", "check_git_status", "answer_question"}
 
 
@@ -73,6 +94,26 @@ def _load_note_chunks():
         chunks.extend([(p.strip(), path.name) for p in paragraphs if p.strip() and len(p.strip()) > 80])
     return chunks
 
+def _embed_with_retry(texts, task_type):
+    """Retries only temporary failures (5xx or 429 rate limit) with 1s, 2s, 4s backoff."""
+    for attempt in range(MAX_RETRIES):
+        try:
+            return embed(texts, task_type)
+        except errors.APIError as err:
+            retryable = isinstance(err, errors.ServerError) or err.code == 429
+            last = attempt + 1 == MAX_RETRIES
+            if not retryable or last:
+                raise
+            wait = 2 ** attempt
+            print(f"[embed] attempt {attempt + 1}/{MAX_RETRIES} failed ({err.code}), retrying in {wait}s")
+            time.sleep(wait)
+
+def _load_vector_file():
+    if not VECTOR_PATH.exists():
+        print('Embeddingds doesnt exist, Need to generate embeddings over')
+        return None
+    with open(VECTOR_PATH, encoding="utf-8") as f:
+        return json.load(f)
 
 def _build_collection_if_empty():
     """
@@ -86,21 +127,29 @@ def _build_collection_if_empty():
         print(f"[startup] ChromaDB collection already has {collection.count()} chunks, skipping rebuild.")
         return
 
-    print(f"[startup] Collection empty. Looking for notes in: {REPO_ROOT / 'days'}")
-    chunks = _load_note_chunks()
-    if not chunks:
-        print("[startup] WARNING: no chunks found in days/*.md — REPO_ROOT is likely wrong.")
+    # print(f"[startup] Collection empty. Looking for notes in: {REPO_ROOT / 'days'}")
+    # chunks = _load_note_chunks()
+    # if not chunks:
+    #     print("[startup] WARNING: no chunks found in days/*.md — REPO_ROOT is likely wrong.")
+    #     return
+
+    # print(f"[startup] Rebuilding collection from {len(chunks)} chunks...")
+    # texts = [text for text, _ in chunks]
+    # sources = [source for _, source in chunks]
+    
+    # ids = [str(i) for i in range(len(texts))]
+    # metadatas = [{"source": source} for source in sources]
+    entries = _load_vector_file()
+    if entries is None:
         return
 
-    print(f"[startup] Rebuilding collection from {len(chunks)} chunks...")
-    texts = [text for text, _ in chunks]
-    sources = [source for _, source in chunks]
-    vectors = embed(texts)
-    ids = [str(i) for i in range(len(texts))]
-    metadatas = [{"source": source} for source in sources]
+    ids = [str(i) for i in range(len(entries))]
+    documents = [e['text'] for e in entries]
+    embeddings = [e['vector'] for e in entries]
+    metadatas = [{'source': e['source']} for e in entries]
 
-    collection.add(documents=texts, embeddings=vectors, metadatas=metadatas, ids=ids)
-    print(f"[startup] Done. Collection now has {collection.count()} chunks.")
+    collection.add(documents=documents, embeddings=embeddings, metadatas=metadatas, ids=ids)
+    print(f"[startup] Loaded {collection.count()} chunks from {VECTOR_PATH.name}")
 
 
 try:
@@ -125,7 +174,7 @@ def retrieve_chunks(query, n_results=10):
     source metadata, and cosine distance (lower = more similar) for each.
     Does NOT call the LLM here — that happens in answer_question().
     """
-    query_vector = embed(query)
+    query_vector = embed(query, "RETRIEVAL_QUERY")
     results = collection.query(
         query_embeddings=[query_vector],
         n_results=n_results,
