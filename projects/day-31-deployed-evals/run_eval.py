@@ -6,6 +6,7 @@ Test your RAG with automated question sets
 import requests
 import json
 import sys
+import time
 
 def load_eval_questions(filepath="eval_questions.json"):
     """Load evaluation questions from JSON file"""
@@ -143,6 +144,9 @@ def run_evaluation():
                 "passed": False,
                 "error": str(e)
             })
+
+        finally:
+            time.sleep(15)
     
     # Print summary
     print("=" * 70)

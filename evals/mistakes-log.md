@@ -41,3 +41,17 @@ Fields: **Wrong** = what I did or believed. **Right** = the correct understandin
 | 2026-10-27 | 40 | Edited the live app file with half-written code before testing | Isolate in a scratch file, verify, then integrate | Why test in a scratch file first? | open |
 | 2026-10-27 | 40 | Ran `assistant.py` before the loader was wired; the old rebuild burned the quota again | Check what runs at import/startup before running a file that can call a paid or limited API | What did running the file trigger, and what did it cost? | open |
 | 2026-10-27 | 40 | Moved on after "it works" for in-scope questions only | Test the failure path too (out-of-scope question); that is where the fake-source bug was | Which test would have caught the threshold bug on day one? | open |
+
+## Caching and Python references
+
+| Date | Day | Wrong | Right | Check | Status |
+| --- | --- | --- | --- | --- | --- |
+| 2026-10-28 | 37 | Picked the right cause (caller mutated the cached dict) but could not explain why mutating a returned dict corrupts the cache | Dicts are passed by reference: the cache and the caller hold the same object, so `.pop()` in the caller changes the cached copy; return a copy (`dict(...)`) at the cache boundary | Why did every cache hit after the first crash, and what is the fix? | open |
+
+## Evals
+
+| Date | Day | Wrong | Right | Check | Status |
+| --- | --- | --- | --- | --- | --- |
+| 2026-10-28 | 41 | Edited the Day 16 eval instead of the Day 31 live eval; sleep placed outside the try block (SyntaxError) | Check which file hits the live endpoint; keep `time.sleep` in a `finally:` so it runs for errors too | Which eval talks to the live site, and why did it need a sleep? | open |
+| 2026-10-28 | 41 | Predicted 4 requests would pass a limit of `len(recent) >= 5` | Requests 1-5 pass, the 6th is blocked | How many of 10 rapid requests pass a limit of 5 per 60 s? | open |
+| 2026-10-28 | 41 | Proposed adding keywords to make a failing eval question pass without first confirming the answer was correct or naming the risk | Judge the answer first; loosening criteria can let wrong answers pass; the 0.6 ratio is meaningless for one keyword | App bug or eval bug, and what is the risk of the fix? | open |

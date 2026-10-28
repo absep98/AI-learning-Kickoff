@@ -58,5 +58,23 @@
         "question": "tell me about my commits",
         "expected_type": "check_git_status",
         "expected_keyword": "changed file"
+    },
+    {
+        "id": 11,
+        "question": "who won the 2018 World Cup?",
+        "expected_type": "answer_question",
+        "expected_keyword": "no relevant notes"
+    },
+    {
+        "id": 12,
+        "question": "how to cook rice?",
+        "expected_type": "answer_question",
+        "expected_keyword": "no relevant notes"
+    },
+    {
+        "id": 13,
+        "question": "what is capital of USA?",
+        "expected_type": "answer_question",
+        "expected_keyword": "no relevant notes"
     }
 ]
