@@ -72,6 +72,7 @@ I learn something every day, write it up in plain language, and commit it here. 
 | [Day 38](days/day-38-input-validation-rate-limiting-and-outage.md) | Input Validation, Rate Limiting, And A Real Production Outage | Added input limits + per-IP rate limiting; found a proxy-IP bug blocking it in prod, then hit and fixed a real HF-API-credits outage |
 | [Day 39](days/day-39-user-feedback-loop.md) | User Feedback Loop (👍/👎) | Added a thumbs up/down feedback loop with structured JSON-line logging; found the HF outage also breaks per-query embeddings, not just startup |
 | [Day 40](days/day-40-switching-embedding-provider.md) | Switching The Embedding Provider (HF → Gemini) | Replaced the dead HF embeddings with Gemini; precomputed vectors offline to dodge the free-tier rate limit; re-tuned the relevance threshold from measured distances. Live on Render, verified |
+| [Day 41](days/day-41-eval-rerun-and-threshold-sweep.md) | Re-Running The Live Eval And Sweeping The Threshold | Re-ran the live eval (12/13), fixed it for the rate limit, added refuse cases, measured the threshold on 24 labelled questions; found distance measures topic, not answerability |
 
 *(This table grows as I progress. Days 23-27 notes were drafted retroactively from actual commits/tests and reviewed before being added here.)*
 
