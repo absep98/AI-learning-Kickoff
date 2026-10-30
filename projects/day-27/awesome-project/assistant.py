@@ -320,6 +320,41 @@ def model_plan_action(intent, context="", history=None):
     except Exception:
         return plan_action(intent), None
 
+def parse_answer(raw_text):
+    """Returns (answer, quote) if raw_text is a JSON object with two string fields, else None."""
+    try:
+        d = json.loads(raw_text)
+    except json.JSONDecodeError:
+        return None
+
+    if not isinstance(d, dict):
+        return None
+
+    answer = d.get("answer")
+    quote = d.get("quote")
+    if not isinstance(answer, str) or not isinstance(quote, str):
+        return None
+
+    return (answer, quote)
+
+
+def normalize(text):
+    text = text.lower()
+    s = " ".join(text.split())
+
+    return s
+
+
+def quote_in_context(quote, context):
+    quote = normalize(quote)
+    context = normalize(context)
+
+    if quote == "":
+        return False
+
+    return quote in context
+
+
 
 if __name__ == "__main__":
     print(check_git_status()["message"])
