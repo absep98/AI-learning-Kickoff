@@ -38,6 +38,33 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 **Day 41 Outcome:** ✅ Re-ran the Day 31 eval against the live Gemini-backed app: 12/13 (92.3%). Found the eval had no refuse cases and would hit the Day 38 rate limit (5 req/60 s), so added a 15 s `finally: time.sleep` and 3 out-of-scope questions; all 3 refused correctly. The one failure (Q1 "what is temperature", keyword `logits`) is a too-narrow keyword, not an app bug. Built a threshold sweep (24 labelled questions, `projects/day-41-threshold-sweep/sweep.py`): 0.35 has the fewest total mistakes (0 false refusals, 2 false answers), so it stays. Real gap found: LoRA and GPT-4-context questions still get fake-sourced answers live, because distance measures topical similarity, not answerability, and the "answer only from context" prompt is ignored. Next (Day 42): a grounding / post-answer check.
 **Day 42 Outcome:** ✅ Built a grounding check so out-of-scope questions that pass the distance threshold are refused instead of answered from model memory with fake sources. The model now returns JSON `answer` + `quote` (empty strings if the notes lack the answer); code (`parse_answer`, `quote_in_context`, now inside `assistant.py`) verifies the quote appears in the retrieved chunks and fails closed otherwise; only validated answers are cached. Local test of 7 questions: LoRA and GPT-4-context (the Day 41 false answers) now refused, temperature/RAG/same-model/vague caching questions still answered. Found a false refusal from markdown in the notes (`**Temperature:** ...`) and fixed it by normalizing to letters and digits. Learned: provenance, verify in code not in the prompt, fail closed, what the quote check does and does not prove, and that an import from another day's folder would have crashed the Render deploy. Next (Day 43): add LoRA/GPT-4 to the live eval as should-refuse, re-run it after deploying, retry-once on bad JSON.
 
+## RAG Backlog (parked on 2026-10-30, come back to these)
+
+RAG is built end to end (Days 10-42). These are the leftovers, in the order I'd do them, so nothing is lost when I move to a new topic.
+
+**Close-out (about 20-30 min, do first):**
+1. Confirm the Day 42 deploy on the live site: "what is temperature" answers; LoRA and "context window of GPT-4" say "No relevant notes found".
+2. Add LoRA and GPT-4-context to `projects/day-31-deployed-evals/eval_questions.json` as should-refuse (ids 14, 15, keyword `no relevant notes`); re-run the live eval for a before/after number.
+3. Widen Q1's expected keyword (`logits`): verify the answer is correct first, add alternatives deliberately.
+4. Retry the model call once when `parse_answer` returns `None` (the code currently refuses immediately).
+5. Refusal paths in `answer_question` skip `_usage_info`, so the cost of a refused call is not recorded; decide whether to track it.
+
+**Small improvements:**
+6. Pass only chunks that are individually under the threshold (today the gate checks only the closest chunk, then all 10 go to the model).
+7. Answer-vs-quote word-overlap (or embedding) check, for the "real but irrelevant quote" weakness.
+8. `ingest.py`: staleness check or reminder when notes change, honour `retryDelay`, save incrementally, build the output path from `__file__`.
+9. `cheatsheet.md` has no summary for Days 31-39.
+
+**Bigger RAG topics from `roadmap-ai-engineer-fde.md` (Phase 1 and 2):**
+- Retrieval-only metrics: recall@k and MRR (did the right chunk come back, separate from answer quality).
+- Hybrid search (BM25 + vectors, reciprocal rank fusion), reranking, structure-aware chunking, contextual retrieval.
+- LLM-as-judge grading (check judge vs my own labels), a golden set of 30+ questions including refuse cases.
+- Tracing: prompt, chunks, answer, latency, tokens, cost per request.
+- Evals in CI: run the eval on every push and fail on regression.
+- Still open from the Section 6 list: privacy/PII handling, human review loops.
+
+**Revision debt:** open rows in `evals/mistakes-log.md` (why-explanations: provenance, what the quote check proves, same-model rule, threshold tied to a model's scale). Keep about 40% of each session on these while learning new topics.
+
 ## Progress Summary
 
 | Area | Status |

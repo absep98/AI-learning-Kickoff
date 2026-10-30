@@ -277,7 +277,7 @@ Success signal:
 - Day 40 status (deployed): switched embeddings to Gemini (`gemini-embedding-001`, 768 dims). Free tier is 100 texts/min, so vectors are precomputed offline (`ingest.py` -> `embeddings.json`) and loaded at startup. Re-tuned `DISTANCE_THRESHOLD` from 0.75 to 0.35 after measuring in-scope vs out-of-scope distances. Live on Render and verified. Day 31 eval re-run still pending.
 - Day 41 status: re-ran the Day 31 eval against the live app (12/13), found it had no refuse cases and would hit the rate limiter, fixed both, and measured the threshold on 24 labelled questions (0.35 best). Found distance measures topic, not answerability.
 - Day 42 status: added a grounding check (JSON answer + quote, quote verified in code, fail closed). LoRA and GPT-4-context false answers are now refused locally. Deployed on push.
-- Next task: add the two near-miss questions to the live eval as should-refuse, re-run it, then decide on a new Month 2/3 focus area (remaining Section 6 items: privacy/PII handling, human review loops).
+- Next task: move to native tool calling then MCP (a known gap: the planner returns a bare action string). RAG leftovers are parked in the "RAG Backlog" section of `progress.md` (live-eval cleanup, retry once, per-chunk threshold, recall@k, hybrid search, reranking, LLM-as-judge, tracing, evals in CI) and get picked up between new topics.
 
 ## Month 1: Foundation And First AI Tool
 
