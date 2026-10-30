@@ -1,4 +1,5 @@
 import json
+import re
 
 
 def parse_answer(raw_text):
@@ -20,10 +21,10 @@ def parse_answer(raw_text):
 
 
 def normalize(text):
-    text = text.lower()
-    s = " ".join(text.split())
-
-    return s
+    # Lowercase, then keep only letters/digits separated by single spaces, so markdown
+    # (**bold**, backticks), colons and other punctuation can't cause a false rejection.
+    text = re.sub(r"[^a-z0-9]+", " ", text.lower())
+    return text.strip()
 
 
 def quote_in_context(quote, context):
