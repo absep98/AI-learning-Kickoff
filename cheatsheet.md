@@ -406,6 +406,17 @@ n tokens → n² attention computations. 10x more tokens = 100x more compute. Th
 
 ---
 
+## Day 43 — Native Tool Calling
+
+### The model asks, your code runs
+- A tool is described as a schema: `name`, `description` (what the model reads to choose it), `parameters` (inputs; `required` lists the ones it must fill). `tools=TOOLS` is its own argument to `create(...)`, not part of `messages`.
+- The model replies with `content=None` and a `tool_calls` list (a list: there can be several). Each has `id`, `function.name`, `function.arguments`.
+- `arguments` is a JSON **string**: `json.loads(call.function.arguments)["day"]`.
+- The API is stateless, so the second call needs: the original user message, the model's assistant message (as it came, no wrapper), and `{"role": "tool", "tool_call_id": call.id, "content": text}`.
+- Versus my Day 25 planner: the planner only picks an action by plain text and I clean it up; tool calling lets the model also pass inputs, in a structured field.
+- `model_plan_action` fallback = the model's reply is unusable (empty, a sentence, not in `ALLOWED_ACTIONS`) or the API call fails; not "no desk matches" (`answer_question` is the catch-all).
+- `Path.glob("day-NN-*.md")` finds files by pattern; `f"{day:02d}"` pads to two digits.
+
 ## Repo Assistant — Current Architecture (as of Day 42)
 
 ```

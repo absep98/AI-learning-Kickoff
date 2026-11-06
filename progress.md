@@ -7,7 +7,7 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 ## Current Focus
 
 **Phase:** Month 2 - AI Coding Workflow And A Product Feature
-**Current Day:** Day 43 (next: live eval with the grounding check, see Day 42 Outcome)
+**Current Day:** Day 43 (native tool calling, in progress). Live eval close-out done 2026-10-30 (14/15, Q1 keyword now `random`, not re-run). **Where we left off (2026-11-06):** the full tool-calling round trip works in `projects/day-43-tool-calling/try_tools.py` (see `days/day-43-native-tool-calling.md`). Revision block deferred: do it first next session. Next: loop over several tool calls, validate name/arguments in code, replace `model_plan_action` with a tool-calling version, then MCP.
 **Main Goal:** Added a thumbs up/down feedback loop to `/ask`/`/chat` (Section 6's "User feedback loops" item) — each answer gets a UUID, votes append as structured JSON lines to `feedback_log.jsonl`. Confirmed working end-to-end, locally and live, for tool-routed questions. RAG questions are still blocked by the unrelated Hugging Face credits outage from Day 38 (now confirmed to also break per-query embedding, not just startup) — deliberately deferred as its own separate task rather than rushed into this day's scope.
 
 **Day 16 Outcome:** ✅ Eval target achieved at **80% (16/20)** after iterative retrieval debugging + eval expectation tuning.
@@ -43,9 +43,9 @@ Use this file as the day-to-day working journal for the AI roadmap. Keep the mai
 RAG is built end to end (Days 10-42). These are the leftovers, in the order I'd do them, so nothing is lost when I move to a new topic.
 
 **Close-out (about 20-30 min, do first):**
-1. Confirm the Day 42 deploy on the live site: "what is temperature" answers; LoRA and "context window of GPT-4" say "No relevant notes found".
-2. Add LoRA and GPT-4-context to `projects/day-31-deployed-evals/eval_questions.json` as should-refuse (ids 14, 15, keyword `no relevant notes`); re-run the live eval for a before/after number.
-3. Widen Q1's expected keyword (`logits`): verify the answer is correct first, add alternatives deliberately.
+1. DONE 2026-10-30 (verified on prod): Confirm the Day 42 deploy on the live site: "what is temperature" answers; LoRA and "context window of GPT-4" say "No relevant notes found".
+2. DONE 2026-10-30 (live eval 14/15; ids 14, 15 pass): Add LoRA and GPT-4-context to `projects/day-31-deployed-evals/eval_questions.json` as should-refuse (ids 14, 15, keyword `no relevant notes`); re-run the live eval for a before/after number.
+3. DONE 2026-10-30 (`logits` -> `random`, answer was correct, not re-run yet): Widen Q1's expected keyword (`logits`): verify the answer is correct first, add alternatives deliberately.
 4. Retry the model call once when `parse_answer` returns `None` (the code currently refuses immediately).
 5. Refusal paths in `answer_question` skip `_usage_info`, so the cost of a refused call is not recorded; decide whether to track it.
 

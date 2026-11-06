@@ -3,7 +3,7 @@
         "id": 1,
         "question": "what is temperature",
         "expected_type": "answer_question",
-        "expected_keyword": "logits"
+        "expected_keyword": "random"
     },
     {
         "id": 2,
@@ -74,6 +74,18 @@
     {
         "id": 13,
         "question": "what is capital of USA?",
+        "expected_type": "answer_question",
+        "expected_keyword": "no relevant notes"
+    },
+    {
+        "id": 14,
+        "question": "how does LoRA fine-tuning work",
+        "expected_type": "answer_question",
+        "expected_keyword": "no relevant notes"
+    },
+    {
+        "id": 15,
+        "question": "what is the context window of GPT-4",
         "expected_type": "answer_question",
         "expected_keyword": "no relevant notes"
     }
