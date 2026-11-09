@@ -417,6 +417,9 @@ n tokens → n² attention computations. 10x more tokens = 100x more compute. Th
 - `model_plan_action` fallback = the model's reply is unusable (empty, a sentence, not in `ALLOWED_ACTIONS`) or the API call fails; not "no desk matches" (`answer_question` is the catch-all).
 - `Path.glob("day-NN-*.md")` finds files by pattern; `f"{day:02d}"` pads to two digits.
 
+- **Several tool calls (Day 44):** a model may request tools one at a time, so a fixed two-call script stops too early; the real shape is a capped loop (ask, run any `tool_calls`, append results, ask again, stop on plain `content`).
+- **Malformed tool calls (Day 44):** `openai/gpt-oss-20b` wrote the tool name `get_time<|channel|>commentary`; Groq rejected it (`tool_use_failed`). At `temperature=0` a retry repeats it, so change one thing (model, tool, prompt). List real models with `client.models.list()` and keep the model name in one constant.
+
 ## Repo Assistant — Current Architecture (as of Day 42)
 
 ```

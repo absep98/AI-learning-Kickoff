@@ -278,6 +278,7 @@ Success signal:
 - Day 41 status: re-ran the Day 31 eval against the live app (12/13), found it had no refuse cases and would hit the rate limiter, fixed both, and measured the threshold on 24 labelled questions (0.35 best). Found distance measures topic, not answerability.
 - Day 42 status: added a grounding check (JSON answer + quote, quote verified in code, fail closed). LoRA and GPT-4-context false answers are now refused locally. Deployed on push.
 - Day 43 status: live-eval close-out done (14/15, Q1 keyword fixed); first native tool-calling round trip working in a scratch script (`projects/day-43-tool-calling/try_tools.py`), not yet in the live assistant. Revision block deferred.
+- Day 44 status: tool calls arrive one at a time (needs a capped loop); a small model produced a malformed tool name, fixed by switching to `qwen/qwen3.8-27b`; loop not built yet. Revision block partly done (Q3 owed).
 - Next task: finish native tool calling (loop over several calls, validate name and arguments in code, replace `model_plan_action`), then MCP (a known gap: the planner returns a bare action string). RAG leftovers are parked in the "RAG Backlog" section of `progress.md` (live-eval cleanup, retry once, per-chunk threshold, recall@k, hybrid search, reranking, LLM-as-judge, tracing, evals in CI) and get picked up between new topics.
 
 ## Month 1: Foundation And First AI Tool
